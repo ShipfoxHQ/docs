@@ -51,6 +51,32 @@ If you've written GitHub Actions, you already know how to read this file — tha
   </Step>
 </Steps>
 
+The same flow as one picture — note that the runner **polls outbound** (nothing connects into your compute), and that the agent step and its gate loop sit inside the ordinary step sequence:
+
+```mermaid
+flowchart LR
+  GH["GitHub push"] --> MATCH
+  SEN["Sentry issue"] --> MATCH
+  WH["Webhook or manual fire"] --> MATCH
+  subgraph CP["Shipfox control plane"]
+    MATCH["Match trigger: connection slug + event"] --> RUN["Create run: event data resolved into prompts and env"]
+    RUN --> DAG["Schedule jobs: needs DAG"]
+    LOGS[("Live logs and agent sessions")]
+  end
+  subgraph RB["Your compute"]
+    CLAIM["Runner polls and claims a job — outbound only"]
+    CLAIM --> S1["run: npm ci"]
+    S1 --> AG["agent: model + prompt, repo checked out"]
+    AG --> GATE["run: npm test + gate"]
+    GATE -- "fails: restart_from" --> AG
+  end
+  CLAIM -->|"polls for jobs"| DAG
+  S1 -.-> LOGS
+  AG -. "messages, thinking, tool calls, cost" .-> LOGS
+  GATE -.-> LOGS
+  LOGS --> DB["Dashboard, streaming live"]
+```
+
 ## Core concepts
 
 <CardGroup cols={2}>
