@@ -46,24 +46,24 @@ triggers:
 ## Events
 
 The most common event is `push`, which fires on every push to a connected
-repository. Shipfox also forwards other GitHub webhook events the App is
-subscribed to, named `<resource>` or `<resource>.<action>`:
+repository:
 
-| Event | Fires when |
-|---|---|
-| `push` | A commit is pushed to a connected repository |
-| `pull_request.opened` | A pull request is opened |
-| `pull_request.closed` | A pull request is closed |
-| `issues.opened` | An issue is opened |
-| `issue_comment.created` | A comment is added to an issue or PR |
-| `release.published` | A release is published |
+```yaml
+triggers:
+  on_push:
+    source: github_acme
+    event: push
+```
 
-<Note>
-  The full set of event names follows GitHub's own webhook event catalog. See
-  [GitHub's webhook events and payloads](https://docs.github.com/en/webhooks/webhook-events-and-payloads)
-  for every event and its payload shape — Shipfox forwards the raw payload to your
-  run rather than re-documenting it.
-</Note>
+Shipfox forwards any GitHub webhook event the App is subscribed to, named
+`<resource>` or `<resource>.<action>` (for example `pull_request.opened`,
+`issues.opened`, `release.published`), passing the raw payload straight to your run.
+Rather than duplicate GitHub's catalog here, use GitHub's own reference for the full
+list of events and their payload shapes:
+
+<Card title="GitHub webhook events and payloads" icon="github" href="https://docs.github.com/en/webhooks/webhook-events-and-payloads">
+  The authoritative list of every GitHub webhook event and the payload it delivers.
+</Card>
 
 ## Event payload
 

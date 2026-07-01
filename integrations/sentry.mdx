@@ -43,21 +43,55 @@ triggers:
 
 ## Events
 
-| Event | Fires when |
-|---|---|
-| `issue.created` | A new issue is created |
-| `issue.resolved` | An issue is marked resolved |
-| `issue.assigned` | An issue is assigned to someone |
-| `issue.archived` | An issue is archived (ignored) |
-| `issue.unresolved` | A resolved issue regresses |
+Shipfox triggers on Sentry **issue** events: `issue.created`, `issue.resolved`,
+`issue.assigned`, `issue.archived`, and `issue.unresolved`. For exactly when each
+action fires and the payload it carries, use Sentry's reference rather than a copy
+here:
 
-## Event payload
+<Card title="Sentry issue webhooks" icon="bug" href="https://docs.sentry.io/organization/integrations/integration-platform/webhooks/issues/">
+  When each issue action fires and the payload Sentry sends.
+</Card>
 
-Shipfox passes a normalized issue payload to the run, including the issue's action,
-id, short id, title, culprit, level, status, platform, and links back to the issue
-in Sentry. See
-[Sentry's webhook documentation](https://docs.sentry.io/organization/integrations/integration-platform/webhooks/)
-for the upstream event shapes.
+The run receives a normalized version of that payload as its `event` context — the
+issue's `action`, `issueId`, `title`, `level`, `status`, `platform`, `projectUrl`,
+and links back to Sentry (`issueUrl`, `webUrl`).
+
+## Filtering by project or team
+
+Shipfox receives issue events for your **whole connected Sentry organization**. To
+act on a specific project — or a team's projects — key off the project the event
+carries as `event.projectUrl`.
+
+The intended way is a trigger `filter`:
+
+```yaml
+triggers:
+  on_backend_issue:
+    source: sentry_acme
+    event: issue.created
+    filter: event.projectUrl.contains("/backend")
+```
+
+<Warning>
+  `filter` is **parsed but not evaluated yet** (see
+  [Expressions](/reference/expressions)), so today it does not stop the run. Until it
+  ships, scope inside the workflow: read `${{ event.projectUrl }}` in a `run` step or
+  agent `prompt` and act only on the projects you care about. Sentry's issue payload
+  has no team field, so filter a team by the set of projects it owns.
+</Warning>
+
+For example, pass the project and issue straight into an agent so it only triages
+what you point it at:
+
+```yaml
+jobs:
+  triage:
+    steps:
+      - model: claude-opus-4-8
+        prompt: >
+          Triage this Sentry issue in project ${{ event.projectUrl }}:
+          "${{ event.title }}" (${{ event.issueUrl }}). Summarize the likely cause.
+```
 
 ## Filtering
 
