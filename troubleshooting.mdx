@@ -30,7 +30,7 @@ This page covers the most common issues teams encounter with Shipfox and how to 
     **Cause:** Workflow YAML contains invalid or unsupported keys.
 
     **Common mistakes:**
-    - Using `loop`, `matrix`, `branch`, or `${{ }}` — these are roadmap features not yet shipped.
+    - Using `loop`, `matrix`, or `branch` — these are roadmap features not yet shipped. (`${{ }}` interpolation **is** shipped; writing `{{ }}` instead of `${{ }}` is the common mistake.)
     - Setting `env` on an agent step — `env` is run-step only.
     - Using `model`, `thinking`, or `provider` on a `run` step.
     - No `prompt` on an agent step.

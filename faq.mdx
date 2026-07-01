@@ -44,7 +44,7 @@ Quick answers to the most common questions about Shipfox. For more depth on any 
   </Accordion>
 
   <Accordion title="What happens when a gate's `restart_from` loops infinitely?">
-    Set `execution_timeout` on the job (e.g., `"30m"`) to cap total job duration. Without a timeout, a loop can run until the job hits the system maximum.
+    It can't loop infinitely — a gating step gets **3 attempts by default**, then the job fails. The job-level `execution_timeout` adds an outer wall-clock bound (default 6 hours). See [Loop bounds](/concepts/gates#loop-bounds).
   </Accordion>
 
   <Accordion title="Why is my run showing `exit_code != 0` on an agent step?">

@@ -4,10 +4,12 @@ sidebarTitle: "Gates"
 description: "A gate decides whether a run step succeeded and can restart the job from an earlier step when it fails — building bounded retry loops with no external scripting."
 ---
 
-A **gate** turns a run step's exit code into a decision: did this step succeed, and
+A **gate** turns a step's exit code into a decision: did this step succeed, and
 if not, what should happen? Gates let you build **bounded retry loops** — run a
 step, check a condition, and restart from an earlier step until it passes — without
-any external scripting or orchestration.
+any external scripting or orchestration. This is how Shipfox turns an agent into an
+iterating worker: the agent edits, a `run` step judges the result, and the gate
+sends the agent back until the check passes.
 
 ## The gate schema
 
@@ -42,9 +44,10 @@ steps:
 </ParamField>
 
 <Note>
-  Gates apply to **run steps only**. The schema rejects a `gate` on an agent step.
-  To act on an agent's result, follow it with a `run` step that inspects the output
-  and gate on that.
+  Gates are valid on **both run steps and agent steps** — `success_if` always
+  evaluates the step's `exit_code`. The most reliable loop still puts the gate on a
+  `run` step that objectively verifies the agent's work (tests, a linter), with
+  `restart_from` pointing back at the agent.
 </Note>
 
 ## How a gate is evaluated

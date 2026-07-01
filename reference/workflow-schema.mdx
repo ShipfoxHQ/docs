@@ -31,7 +31,7 @@ This page is the authoritative reference for the Shipfox workflow YAML schema. W
 ## Trigger fields
 
 <ParamField body="source" type="string" required>
-  The integration source that produces this trigger (e.g., `github`, `sentry`, `manual`). See the [Trigger Sources reference](/reference/trigger-sources) for all supported values.
+  Where the event comes from. For an integration this is the **connection slug** (e.g., `github_acme`, `sentry_acme`) — not the bare provider name; a `source` that matches no connection slug is stored but never fires. For on-demand runs it is the literal string `manual`. See the [Trigger Sources reference](/reference/trigger-sources).
 </ParamField>
 
 <ParamField body="event" type="string" required>
@@ -66,6 +66,14 @@ This page is the authoritative reference for the Shipfox workflow YAML schema. W
 
 <ParamField body="execution_timeout" type="string">
   Maximum duration allowed for this job before it is cancelled (e.g., `"30m"`, `"2h"`).
+</ParamField>
+
+<ParamField body="success" type="string">
+  A CEL expression that decides whether the job succeeded once all its executions settle, with `executions` (a list of `{index, status}`) in scope. Defaults to all executions succeeding. See [Expressions](/reference/expressions#job-success--success).
+</ParamField>
+
+<ParamField body="listening" type="object">
+  Turns the job into a [listening job](/concepts/listening-jobs) that reacts to events inside the run (🚧 coming soon — the field parses and validates, but listening jobs do not execute yet).
 </ParamField>
 
 <ParamField body="name" type="string">

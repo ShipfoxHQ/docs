@@ -22,7 +22,7 @@ Shipfox is built for AI-forward engineering teams — the workflow YAML your age
 
 ## Why this matters for Shipfox
 
-The most common mistake when writing Shipfox YAML is using roadmap-only keys (`loop`, `matrix`, `${{ }}`), mixing `run` and `prompt` on one step, or setting `env` on an agent step. These errors are easy to make when working from memory or incomplete documentation — and they all result in rejected workflows at validation time.
+The most common mistake when writing Shipfox YAML is using roadmap-only keys (`loop`, `matrix`, `branch`), writing `{{ }}` instead of `${{ }}` for interpolation, mixing `run` and `prompt` on one step, or setting `env` on an agent step. These errors are easy to make when working from memory or incomplete documentation — and they all result in rejected workflows at validation time.
 
 An agent with the Shipfox skill or the copy/paste prompt avoids all of these pitfalls before the YAML ever reaches your repo. The skill encodes the verified schema, the hard validation rules, the today/roadmap boundary, and correct examples — giving your agent a precise, authoritative reference rather than a best guess.
 
