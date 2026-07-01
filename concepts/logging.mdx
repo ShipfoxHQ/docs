@@ -1,6 +1,6 @@
 ---
 title: "Logging: Live and Persisted Output for Every Step"
-sidebarTitle: "Logging"
+sidebarTitle: "Logs & Agent Sessions"
 description: "Shipfox streams run-step output and structured agent-session events live, then compacts them to object storage. Secrets are masked; logs are retained and bounded."
 ---
 
@@ -12,16 +12,17 @@ model messages, thinking, and tool calls are captured as structured events.
 ## What gets logged
 
 <Tabs>
-  <Tab title="Run steps">
-    A `run` step's `stdout` and `stderr` are captured line by line. Output can be
-    organized into named, collapsible [groups](#grouping-output). Secrets known to
-    the runner are masked before the output leaves the machine.
-  </Tab>
   <Tab title="Agent steps">
     An agent step captures a structured **session** in addition to any stdout: each
     model message, thinking block, tool call, and tool result becomes its own entry,
     along with the provider, model, token usage, and cost. The dashboard expands
-    these into a readable transcript rather than a wall of text.
+    these into a readable transcript rather than a wall of text — you watch the
+    agent work, not just its stdout.
+  </Tab>
+  <Tab title="Run steps">
+    A `run` step's `stdout` and `stderr` are captured line by line. Output can be
+    organized into named, collapsible [groups](#grouping-output). Secrets known to
+    the runner are masked before the output leaves the machine.
   </Tab>
 </Tabs>
 

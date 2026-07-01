@@ -90,19 +90,21 @@ jobs:
   build:
     steps:
       - run: echo "hello world"
-      - name: summarize
+      - name: explain
         model: claude-opus-4-8
-        prompt: Say hello back in one short sentence.
+        prompt: >
+          Read this repository and explain in two sentences what it does
+          and how you would run its tests.
 ```
 
 Push the updated file. Fire another run and you should see output similar to:
 
 ```text
-summarize · claude-opus-4-8
-Hello back! 👋
+explain · claude-opus-4-8
+This repository is a small demo service... To run its tests, ...
 ```
 
-Agent output varies between runs — the model's response is non-deterministic, so expect different wording each time. The step is still marked as succeeded or failed based on whether the model call completes without error.
+The agent had your repository checked out — it read real files to answer. Open the step in the dashboard to see the full **agent session**: every message, thinking block, and tool call, plus token usage and cost. Output varies between runs; the step still succeeds or fails based on whether the call completes.
 
 To make the agent *act on your code* — fix failing tests, review a diff — give it a repo-aware prompt and pair it with a [gate](/concepts/gates) so it retries until a check passes. Agent steps use your workspace's configured [model provider](/reference/model-providers), so configure one before running them.
 
