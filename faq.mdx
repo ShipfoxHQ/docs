@@ -24,7 +24,7 @@ Quick answers to the most common questions about Shipfox. For more depth on any 
   </Accordion>
 
   <Accordion title="Can I use `${{ }}` template expressions in my workflow?">
-    Not yet — `${{ }}` interpolation is roadmap. All `run` commands and `prompt` strings are treated as literals today. Write static values.
+    Yes. `${{ }}` interpolation is supported in `run` commands, `env` values, and agent `prompt`s, resolved when the run is created from `run`, `trigger`, `event`, and `inputs` context. Trigger `filter` expressions are the exception — still parsed but not evaluated. See [Expressions](/reference/expressions).
   </Accordion>
 
   <Accordion title="What does `filter:` do today?">

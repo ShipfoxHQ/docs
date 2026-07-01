@@ -59,7 +59,9 @@
               "reference/workflow-schema",
               "reference/trigger-sources",
               "reference/step-types",
+              "reference/expressions",
               "reference/model-providers",
+              "reference/rest-api",
               "reference/glossary"
             ]
           },

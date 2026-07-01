@@ -98,7 +98,7 @@ steps:
 ```
 
 <ParamField path="prompt" type="string" required>
-  The instruction sent to the AI model. Write literal text — template expressions are not evaluated yet.
+  The instruction sent to the AI model. Supports `${{ }}` interpolation from run and trigger context — see [Expressions](/reference/expressions).
 </ParamField>
 
 <ParamField path="model" type="string">
