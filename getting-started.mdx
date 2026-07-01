@@ -54,7 +54,7 @@ The fields at a glance:
 | `steps` | An ordered list of steps. Each step is either a `run` command or an agent step (`model` + `prompt`). |
 
 <Note>
-  `filter` is roadmap — the `on_push` trigger fires on every push today; branch or path filtering is not yet evaluated. Push triggers require GitHub (or the local Gitea in [evaluation mode](/installation/local)); GitLab support is on the roadmap. Use a manual trigger (`source: manual, event: fire`) in the meantime if you need GitLab testing.
+  `filter` is roadmap — the `on_push` trigger fires on every push today; branch or path filtering is not yet evaluated. Push triggers require GitHub; GitLab support is on the roadmap. Use a manual trigger (`source: manual, event: fire`) in the meantime if your repository is not on GitHub.
 </Note>
 
 Commit and push the file to your connected repository. Shipfox detects the new workflow file automatically — no manual import is required.
