@@ -36,7 +36,9 @@
               "integrations/overview",
               "integrations/github",
               "integrations/sentry",
-              "integrations/webhooks"
+              "integrations/webhooks",
+              "integrations/linear",
+              "integrations/slack"
             ]
           },
           {
