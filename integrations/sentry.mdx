@@ -1,0 +1,77 @@
+---
+title: "Sentry Integration: Trigger Workflows on Issue Events"
+sidebarTitle: "Sentry"
+description: "Connect Sentry to Shipfox and trigger workflows when issues are created, resolved, assigned, archived, or regress. Reference the connection by its slug."
+---
+
+The Sentry integration connects a Sentry organization to Shipfox through a
+**Sentry App**. Once connected, issue lifecycle events can trigger workflow runs —
+for example, kicking off an agent to investigate a newly created issue.
+
+## Setup
+
+<Steps>
+  <Step title="Start the connection">
+    In your workspace's integration settings, choose **Sentry** and start the
+    connection. Shipfox sends you to Sentry to install its App.
+  </Step>
+  <Step title="Install the Sentry App">
+    On Sentry, pick the organization and authorize the App. Sentry redirects you
+    back to Shipfox, which verifies the installation.
+  </Step>
+  <Step title="Copy the connection slug">
+    Shipfox creates a **connection** whose slug defaults to `sentry_<org>` — for
+    example `sentry_acme`. Use this slug in a trigger's `source` field.
+  </Step>
+</Steps>
+
+## Triggering a workflow
+
+Use the connection slug as `source` and a Sentry issue event as `event`:
+
+```yaml
+triggers:
+  on_new_issue:
+    source: sentry_acme
+    event: issue.created
+```
+
+<Warning>
+  `source` must be the **connection slug** (for example `sentry_acme`), not the
+  literal word `sentry`.
+</Warning>
+
+## Events
+
+| Event | Fires when |
+|---|---|
+| `issue.created` | A new issue is created |
+| `issue.resolved` | An issue is marked resolved |
+| `issue.assigned` | An issue is assigned to someone |
+| `issue.archived` | An issue is archived (ignored) |
+| `issue.unresolved` | A resolved issue regresses |
+
+## Event payload
+
+Shipfox passes a normalized issue payload to the run, including the issue's action,
+id, short id, title, culprit, level, status, platform, and links back to the issue
+in Sentry. See
+[Sentry's webhook documentation](https://docs.sentry.io/organization/integrations/integration-platform/webhooks/)
+for the upstream event shapes.
+
+## Filtering
+
+A `filter` CEL expression (for example `event.action == "resolved"`) is parsed but
+**not yet evaluated** — every matching issue event fires the trigger today. Narrow
+inside a step until filter evaluation ships.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Agent steps" icon="robot" href="/guides/agent-steps">
+    Have an agent triage or fix the issue that triggered the run.
+  </Card>
+  <Card title="Triggers" icon="bolt" href="/concepts/triggers">
+    The trigger schema and how sources and events fit together.
+  </Card>
+</CardGroup>

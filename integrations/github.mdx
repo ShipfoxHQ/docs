@@ -1,0 +1,105 @@
+---
+title: "GitHub Integration: Trigger Workflows on Repository Events"
+sidebarTitle: "GitHub"
+description: "Connect a GitHub repository to Shipfox with the GitHub App and trigger workflows on pushes and other repository events. Reference the connection by its slug."
+---
+
+The GitHub integration connects a repository or organization to Shipfox through a
+**GitHub App**. Once connected, repository events — pushes and any other event the
+App is subscribed to — can trigger workflow runs.
+
+## Setup
+
+<Steps>
+  <Step title="Start the connection">
+    In your workspace's integration settings, choose **GitHub** and start the
+    connection. Shipfox sends you to GitHub to install its App.
+  </Step>
+  <Step title="Install the GitHub App">
+    On GitHub, pick the account or organization and grant the App access to the
+    repositories you want Shipfox to watch. GitHub redirects you back to Shipfox.
+  </Step>
+  <Step title="Copy the connection slug">
+    Shipfox creates a **connection** for the installation. Its slug defaults to
+    `github_<account>` — for example `github_acme`. This slug is the value you put
+    in a trigger's `source` field.
+  </Step>
+</Steps>
+
+## Triggering a workflow
+
+Use the connection slug as `source` and a GitHub event name as `event`:
+
+```yaml
+triggers:
+  on_push:
+    source: github_acme
+    event: push
+```
+
+<Warning>
+  `source` must be the **connection slug** (for example `github_acme`), not the
+  literal word `github`. The slug is shown in your integration settings after you
+  connect.
+</Warning>
+
+## Events
+
+The most common event is `push`, which fires on every push to a connected
+repository. Shipfox also forwards other GitHub webhook events the App is
+subscribed to, named `<resource>` or `<resource>.<action>`:
+
+| Event | Fires when |
+|---|---|
+| `push` | A commit is pushed to a connected repository |
+| `pull_request.opened` | A pull request is opened |
+| `pull_request.closed` | A pull request is closed |
+| `issues.opened` | An issue is opened |
+| `issue_comment.created` | A comment is added to an issue or PR |
+| `release.published` | A release is published |
+
+<Note>
+  The full set of event names follows GitHub's own webhook event catalog. See
+  [GitHub's webhook events and payloads](https://docs.github.com/en/webhooks/webhook-events-and-payloads)
+  for every event and its payload shape — Shipfox forwards the raw payload to your
+  run rather than re-documenting it.
+</Note>
+
+## Event payload
+
+Shipfox passes the raw GitHub webhook payload to the run. For a `push`, that
+includes the pushed ref, the head commit SHA, and the repository's default branch.
+
+The branch ref is exposed to filters as `event.ref` — the **bare branch name**
+(for example `main`), not the full ref path `refs/heads/main`.
+
+## Filtering
+
+You can add a `filter` CEL expression to target specific branches or actions — for
+example `event.ref == "main"`:
+
+```yaml
+triggers:
+  on_main_push:
+    source: github_acme
+    event: push
+    filter: event.ref == "main"
+```
+
+<Note>
+  `filter` is parsed but **not yet evaluated** — the trigger fires on every `push`
+  regardless of the expression. Authoring a filter now is safe and takes effect
+  once evaluation ships. To gate behavior on the branch today, branch inside a
+  `run` step.
+</Note>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Checks on push" icon="circle-check" href="/guides/checks-on-push">
+    A worked example that runs tests and an AI review on every push.
+  </Card>
+  <Card title="Triggers" icon="bolt" href="/concepts/triggers">
+    The trigger schema and how sources and events fit together.
+  </Card>
+</CardGroup>

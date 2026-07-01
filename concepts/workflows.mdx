@@ -17,7 +17,7 @@ env:                       # optional — env vars for run steps
   NODE_ENV: production
 triggers:                  # optional — what starts a run
   on_push:
-    source: github
+    source: github_acme
     event: push
 jobs:                      # required — at least one job
   build:

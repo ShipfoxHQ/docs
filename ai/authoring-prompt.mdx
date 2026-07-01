@@ -16,8 +16,11 @@ valid YAML.
 Top level: name (required), runner (label or list), env (run-step only), triggers,
 jobs (required). Unknown keys are rejected.
 
-Trigger { source, event, filter?, with? }. Shipped: manual/fire, github/push,
-sentry/issue.(created|resolved|assigned|archived|unresolved). At most one manual
+Trigger { source, event, filter?, with? }. For integrations, source is the
+CONNECTION SLUG (e.g. github_<org>, sentry_<org>, or your webhook slug), not the
+bare provider name; for on-demand runs it is literally "manual". Shipped events:
+manual/fire, github push (+ other GitHub events), sentry issue.(created|resolved|
+assigned|archived|unresolved), custom-webhook/webhook.received. At most one manual
 trigger.
 
 Job { steps (>=1), needs?, runner?, env? }. Jobs run in parallel; each is isolated
@@ -27,8 +30,9 @@ Step is a run step { run, name?, env?, gate? } OR an agent step
 { model, prompt, thinking?, provider?, name?, gate? } — never both; agent requires
 prompt; env is run-only.
 
-gate { success_if: "<CEL over exit_code>", on_failure: { restart_from: "<earlier
-named step>" } }.
+gate (run steps only) { success_if: "<CEL over exit_code>", on_failure: {
+restart_from: "<earlier named step>", output?: "<message>" } }. Restarts are capped
+(3 attempts per gating step) before the job fails.
 
 Do NOT use (not shipped): loop, matrix, branch, structured output, reusable agents,
 and ${{ }} interpolation (prompts/run are literal). filter isn't enforced yet.
@@ -57,7 +61,7 @@ event.ref is the bare branch name (e.g. "main").
 The prompt is deliberately compact but complete. It covers every dimension of the shipped schema:
 
 - **Top-level schema fields** — `name`, `runner`, `env`, `triggers`, `jobs`, and which keys are rejected
-- **Trigger sources (shipped today)** — `manual/fire`, `github/push`, and `sentry/issue.*` events
+- **Trigger sources (shipped today)** — `manual`, plus integration connection slugs for GitHub (`push`), Sentry (`issue.*`), and custom webhooks (`webhook.received`)
 - **Job isolation and `needs` ordering** — parallel execution, repo re-cloning, and dependency chaining
 - **Step kinds: run vs. agent** — the two mutually exclusive step shapes and their allowed fields
 - **Gate / restart_from rules** — CEL expressions over `exit_code` and how to wire restart targets
@@ -81,7 +85,7 @@ name: Test and triage
 runner: ubuntu-latest
 triggers:
   on_push:
-    source: github
+    source: github_acme    # your GitHub connection slug
     event: push
 jobs:
   test:
