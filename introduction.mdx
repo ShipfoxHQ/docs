@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Shipfox: Agentic Workflow Automation"
 sidebarTitle: "Introduction"
-description: "Shipfox runs YAML workflows from your repo, treats AI agents as first-class steps, and makes GitHub pushes and Sentry issues native triggers — no glue."
+description: "Shipfox runs YAML workflows from your repo, treats AI agents as first-class steps, and turns events from your tools into native triggers — GitHub, Sentry, any webhook, and more on the way."
 ---
 
 Shipfox runs **agentic workflows** from your repository. A workflow is a YAML file in `.shipfox/workflows/` — triggers, jobs, steps, runners — a shape you already know how to read. The difference is what a step can be: a step runs a shell command **or runs an AI agent** — a `model`, a `prompt`, and your repository checked out. Agents and commands share one lifecycle, so a gate can retry an agent until your tests pass, and every agent step records a full session: messages, thinking, tool calls, token usage, and cost.
@@ -38,7 +38,7 @@ If you've written GitHub Actions, you already know how to read this file — tha
     Write a YAML file under `.shipfox/workflows/` in your repository. Commit and push — Shipfox picks it up automatically without any manual import step.
   </Step>
   <Step title="Configure a trigger">
-    Choose when the workflow runs: on a GitHub push, a Sentry issue, or on demand directly from the dashboard. Each trigger is a named entry under the `triggers` key in your workflow YAML.
+    Choose when the workflow runs: on a GitHub push, a Sentry issue, a webhook from any system, or on demand from the dashboard — with more integrations on the way. Each trigger is a named entry under the `triggers` key in your workflow YAML.
   </Step>
   <Step title="Jobs run on your runners">
     Each job executes on a runner you register with Shipfox. Jobs are fully isolated — each one re-clones the repository before executing, so no state bleeds between runs.
@@ -69,7 +69,7 @@ The same flow as one picture — note that the runner **polls outbound** (nothin
     How work is structured and executed inside a workflow, including shell steps, agent steps, and gate conditions.
   </Card>
   <Card title="Triggers" icon="bolt" href="/concepts/triggers">
-    What starts a run — GitHub pushes, Sentry issues, manual fires from the dashboard, and more.
+    What starts a run — GitHub pushes, Sentry issues, webhooks from any system, manual fires — with more integrations on the way.
   </Card>
   <Card title="Runners" icon="server" href="/concepts/runners">
     The processes you register on your own compute that execute jobs. Runners poll Shipfox and are matched to jobs by label.
