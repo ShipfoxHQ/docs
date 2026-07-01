@@ -14,8 +14,7 @@ platform without any cloud account. For a production deployment, see
     Make sure the following are installed and available on your `PATH` before continuing:
 
     - [Docker](https://docs.docker.com/get-docker/) (with Compose v2)
-    - [Node.js](https://nodejs.org/) 22 or later
-    - [pnpm](https://pnpm.io/installation)
+    - [mise](https://mise.jdx.dev/) — installs the pinned Node.js, pnpm, and turbo versions
     - [Git](https://git-scm.com/)
 
     Clone the Shipfox repository to your local machine:
@@ -32,7 +31,7 @@ platform without any cloud account. For a production deployment, see
     mise install && pnpm install
     ```
 
-    `mise` installs the exact Node, pnpm, and toolchain versions pinned in `.mise.toml`. If you don't use `mise`, ensure your system Node and pnpm match the versions listed in that file.
+    `mise` installs the exact Node, pnpm, and turbo versions pinned in `mise.toml` (run `mise trust` if prompted). If you don't use `mise`, install Node, pnpm, and turbo yourself at the versions listed in that file.
   </Step>
   <Step title="Build packages">
     Build the packages the API and dashboard depend on. Run these two commands in order:
@@ -73,15 +72,30 @@ platform without any cloud account. For a production deployment, see
     pnpm --filter=@shipfox/client dev
     ```
 
-    Wait until both processes print a ready message before proceeding. The dashboard is available at `http://localhost:5173` and the API at `http://localhost:16101`.
+    Wait until both processes are ready before proceeding. The API prints `Server listening at http://127.0.0.1:16101`; the dashboard prints `VITE ready`. The dashboard is available at `http://localhost:5173` and the API at `http://localhost:16101`.
+  </Step>
+  <Step title="Create your account and workspace">
+    Open `http://localhost:5173` and sign up with any name, email, and password.
+
+    <Note>
+      Signup asks you to verify your email. In evaluation mode there is no mail
+      server — the API prints every email to its terminal. Find the line containing
+      `Verify your email` in the API logs and open the verification link it
+      contains.
+    </Note>
+
+    After verification, the dashboard walks you through setup:
+
+    1. **Create your workspace** — pick any name.
+    2. **Install source control** — choose **Gitea** and enter the organization `shipfox` (the org seeded by Docker Compose).
+    3. **Configure agent provider** — skip this unless you want to run agent steps immediately.
+    4. **Create project** — pick a seeded repository such as `shipfox/demo`. The project name is pre-filled from the repository.
   </Step>
   <Step title="Register a runner">
     A runner is required to execute jobs. Follow these steps to register one:
 
-    1. Open the dashboard at `http://localhost:5173` and create a **workspace**.
-    2. Inside the workspace, create a **project** and connect it to the `shipfox/demo` Gitea repository.
-    3. In the dashboard's runner settings, create a **registration token** and copy it.
-    4. Start a runner in a third terminal, passing your token and labels as environment variables:
+    1. Go to **Settings → Runners** and click **Create token**. Name the token, pick an expiry, and copy the token — it is shown only once.
+    2. Start a runner in a third terminal, passing your token and labels as environment variables:
 
     ```bash
     SHIPFOX_API_URL=http://localhost:16101 \
@@ -90,7 +104,7 @@ platform without any cloud account. For a production deployment, see
     pnpm --filter=@shipfox/runner dev
     ```
 
-    The runner reads `SHIPFOX_API_URL`, `SHIPFOX_RUNNER_REGISTRATION_TOKEN`, and `SHIPFOX_RUNNER_LABELS` from its environment. It will appear as **Online** in the dashboard within a few seconds.
+    The runner reads `SHIPFOX_API_URL`, `SHIPFOX_RUNNER_REGISTRATION_TOKEN`, and `SHIPFOX_RUNNER_LABELS` from its environment. Within a few seconds its terminal prints `Runner session registered` — the runner is now polling for jobs. The dashboard does not list connected runners yet; the runner's own log is the place to confirm it is connected.
 
     <Note>
       A runner exits after a default idle window (about 5 minutes). To keep it polling indefinitely during evaluation, add `SHIPFOX_POLL_MAX_DURATION_MS=0` to its environment.
@@ -112,12 +126,27 @@ platform without any cloud account. For a production deployment, see
           - run: echo "Shipfox is running!"
     ```
 
-    Commit and push the file to the Gitea repo, then open the project dashboard and click **Run now** next to the workflow. Watch the logs stream live in the run detail view.
+    Clone the seeded repo from the local Gitea, add the file, and push. The seeded admin account is `gitea-admin` / `gitea-admin-dev-password`, and the Gitea web UI is at `http://localhost:3000`:
+
+    ```bash
+    git clone http://gitea-admin:gitea-admin-dev-password@localhost:3000/shipfox/demo.git
+    ```
+
+    Shipfox picks the workflow up within seconds. Open the project's **Workflows** page and click **Run** next to the workflow. Watch the logs stream live in the run detail view.
   </Step>
 </Steps>
 
 <Note>
-  In evaluation mode, GitHub push triggers will not fire because the local API is not reachable from GitHub's webhook infrastructure. Use manual triggers (`source: manual, event: fire`) for all local testing.
+  In evaluation mode, **GitHub** push triggers will not fire because the local API is not reachable from GitHub's webhook infrastructure. **Gitea** push triggers do fire: the compose stack registers a webhook from the seeded `shipfox` org to your local API. Add a push trigger with the Gitea connection's slug as its source:
+
+  ```yaml
+  triggers:
+    on_push:
+      source: gitea_shipfox   # <provider>_<organization>
+      event: push
+  ```
+
+  Then `git push` to the connected repository and watch the run start.
 </Note>
 
 <Note>

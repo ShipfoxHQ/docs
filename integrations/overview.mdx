@@ -73,9 +73,13 @@ ones:
 
 ## Finding your connection slug
 
-After you connect an integration, its slug is shown in your workspace's
-integration settings alongside the connection's display name. Copy it verbatim
-into the `source` field of your triggers.
+The slug is `<provider>_<account>`, lowercase: connecting the GitHub account
+`acme` creates `github_acme`. Your workspace's integration settings
+(**Settings → Integrations**) show each connection's display name — for example
+"GitHub acme" for the slug `github_acme`. The workspace's **Settings → Events**
+page records every event a connection delivers; an event that shows **No
+workflows triggered** usually means the `source` in your workflow does not match
+the connection's slug.
 
 ## Webhook payloads
 

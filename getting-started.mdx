@@ -16,10 +16,10 @@ A project connects one repository to Shipfox and is the container for all workfl
 
 <Steps>
   <Step title="Create a project">
-    Open your Shipfox workspace dashboard and click **New project**. Give the project a name that matches the repository you want to connect.
+    Open your Shipfox workspace dashboard and create a project. Pick the source connection, then the repository — the project name is pre-filled from the repository and can be edited.
   </Step>
   <Step title="Connect the repository">
-    Select the Git provider and choose the repository. Shipfox reads workflow files from `.shipfox/workflows/` in the default branch. No extra configuration is needed — any `.yaml` or `.yml` file in that directory is treated as a workflow definition.
+    Shipfox reads workflow files from `.shipfox/workflows/` in the default branch. No extra configuration is needed — any `.yaml` or `.yml` file in that directory is treated as a workflow definition.
   </Step>
 </Steps>
 
@@ -54,7 +54,7 @@ The fields at a glance:
 | `steps` | An ordered list of steps. Each step is either a `run` command or an agent step (`model` + `prompt`). |
 
 <Note>
-  `filter` is roadmap — the `on_push` trigger fires on every push today; branch or path filtering is not yet evaluated. Push triggers require GitHub; GitLab support is on the roadmap. Use a manual trigger (`source: manual, event: fire`) in the meantime if you need local or GitLab testing.
+  `filter` is roadmap — the `on_push` trigger fires on every push today; branch or path filtering is not yet evaluated. Push triggers require GitHub (or the local Gitea in [evaluation mode](/installation/local)); GitLab support is on the roadmap. Use a manual trigger (`source: manual, event: fire`) in the meantime if you need GitLab testing.
 </Note>
 
 Commit and push the file to your connected repository. Shipfox detects the new workflow file automatically — no manual import is required.
@@ -63,7 +63,7 @@ Commit and push the file to your connected repository. Shipfox detects the new w
 
 A run is one execution of a workflow. You can start a run in two ways:
 
-- **On demand**: Open the project dashboard, find the workflow, and click **Run now**.
+- **On demand**: Open the project's **Workflows** page, find the workflow, and click **Run**.
 - **On push**: Push a commit to the connected repository — the `on_push` trigger fires automatically.
 
 Once the run starts, click into it to stream live output. For the workflow above you should see:
