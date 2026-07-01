@@ -3,6 +3,7 @@ flowchart TB
     GH2["GitHub"]
     SEN2["Sentry"]
     WH2["Any system — webhook"]
+    SOON2["Slack, Linear, GitLab, ... — coming soon"]
   end
   subgraph CP2["Shipfox control plane — stateless containers you deploy"]
     API["API"]
@@ -21,6 +22,7 @@ flowchart TB
   GH2 -->|webhooks| API
   SEN2 -->|webhooks| API
   WH2 -->|POST| API
+  SOON2 -.-> API
   DASH --> API
   API --> PG
   API --> TMP
@@ -30,3 +32,5 @@ flowchart TB
   PV -->|"starts ephemeral runners"| RN
   RN -->|"clones the repository"| GH2
   RN -->|"agent steps call out with your API keys"| MP
+  classDef soon fill:#fafafa,stroke:#999999,stroke-dasharray:6 4,color:#666666
+  class SOON2 soon
