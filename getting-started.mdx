@@ -96,6 +96,8 @@ Hello back! 👋
 
 Agent output varies between runs — the model's response is non-deterministic, so expect different wording each time. The step is still marked as succeeded or failed based on whether the model call completes without error.
 
+To make the agent *act on your code* — fix failing tests, review a diff — give it a repo-aware prompt and pair it with a [gate](/concepts/gates) so it retries until a check passes. Agent steps use your workspace's configured [model provider](/reference/model-providers), so configure one before running them.
+
 ## Let your agent write workflows
 
 You can use a coding agent to generate and iterate on Shipfox workflows directly in your repository. Install the Shipfox agent skill set and then ask your agent to create or modify a workflow:

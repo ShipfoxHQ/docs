@@ -19,7 +19,7 @@ Shipfox is a continuous shipping platform built for engineering teams who want a
     Each job executes on a runner you register with Shipfox. Jobs are fully isolated — each one re-clones the repository before executing, so no state bleeds between runs.
   </Step>
   <Step title="Steps: commands or agents">
-    Each job contains one or more steps. A step either runs a shell command (`run`) or invokes an AI model by specifying a `model` and a `prompt`. Both step kinds share the same lifecycle: they stream output, report status, and can be gated on success conditions.
+    Each job contains one or more steps. A step runs a shell command (`run`) **or an AI agent** — specify a `model` and a `prompt` and it reads your repo, runs tools, and acts. Agent steps are first-class: same lifecycle as shell steps, so they stream output, report status, and can be gated and retried until the result is correct.
   </Step>
   <Step title="Watch it live">
     Open the Shipfox dashboard to stream logs for every run, job, and step in real time. Drill into any step to see its full output, duration, and exit status.
