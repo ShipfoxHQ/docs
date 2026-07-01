@@ -57,7 +57,7 @@ Shipfox can be self-hosted on your own infrastructure or run in evaluation mode 
     | PostgreSQL | Primary database for Shipfox state |
     | Temporal | Workflow orchestration engine used internally by Shipfox |
     | Gitea | Local Git hosting (simulates GitHub for local push triggers) |
-    | Object storage (MinIO) | Stores step log artifacts and workflow files |
+    | Object storage (garage) | S3-compatible storage for step-log artifacts |
 
     A demo repository `shipfox/demo` is seeded automatically. You can connect this repository to a project for your first run without needing a real GitHub repo.
   </Step>
@@ -79,17 +79,17 @@ Shipfox can be self-hosted on your own infrastructure or run in evaluation mode 
 
     1. Open the dashboard at `http://localhost:5173` and create a **workspace**.
     2. Inside the workspace, create a **project** and connect it to the `shipfox/demo` Gitea repository.
-    3. Navigate to **Settings → Runners → Registration tokens** and click **Create token**.
-    4. Copy the token, then start a runner process — substituting your token and choosing labels that include `ubuntu-latest` and `node-22`:
+    3. In the dashboard's runner settings, create a **registration token** and copy it.
+    4. Start a runner in a third terminal, passing your token and labels as environment variables:
 
     ```bash
-    npx @shipfox/runner start \
-      --token <YOUR_REGISTRATION_TOKEN> \
-      --labels ubuntu-latest,node-22 \
-      --api-url http://localhost:16101
+    SHIPFOX_API_URL=http://localhost:16101 \
+    SHIPFOX_RUNNER_REGISTRATION_TOKEN=<YOUR_REGISTRATION_TOKEN> \
+    SHIPFOX_RUNNER_LABELS=ubuntu-latest,node-22 \
+    pnpm --filter=@shipfox/runner dev
     ```
 
-    The runner will appear as **Online** in the dashboard within a few seconds.
+    The runner reads `SHIPFOX_API_URL`, `SHIPFOX_RUNNER_REGISTRATION_TOKEN`, and `SHIPFOX_RUNNER_LABELS` from its environment. It will appear as **Online** in the dashboard within a few seconds.
   </Step>
   <Step title="Fire your first run">
     Create a workflow file in the `shipfox/demo` repository that uses a manual trigger — for example:
@@ -125,18 +125,19 @@ A runner is a lightweight process you start on any machine — a laptop, a VM, a
 
 To register a new runner:
 
-1. In the Shipfox dashboard, navigate to **Settings → Runners → Registration tokens**.
-2. Click **Create token** and copy the generated token — it is shown only once.
-3. Start the runner on your target machine, passing the token and one or more comma-separated labels:
+1. In the Shipfox dashboard, create a **registration token** in the runner settings.
+2. Copy the generated token — it is shown only once.
+3. Start the runner on your target machine. The runner ships as a Docker image and is configured entirely through environment variables — the API URL, the registration token, and the labels this runner advertises:
 
 ```bash
-npx @shipfox/runner start \
-  --token <YOUR_REGISTRATION_TOKEN> \
-  --labels <LABEL_1>,<LABEL_2> \
-  --api-url <YOUR_SHIPFOX_API_URL>
+docker run --rm \
+  -e SHIPFOX_API_URL=<YOUR_SHIPFOX_API_URL> \
+  -e SHIPFOX_RUNNER_REGISTRATION_TOKEN=<YOUR_REGISTRATION_TOKEN> \
+  -e SHIPFOX_RUNNER_LABELS=<LABEL_1>,<LABEL_2> \
+  <shipfox-runner-image>
 ```
 
-Labels are arbitrary strings (e.g. `ubuntu-latest`, `node-22`, `gpu`, `production`). A job is dispatched to a runner when the runner has **all** the labels listed in the workflow's `runner:` field. Make sure your runner's labels match exactly what your workflows declare — a mismatch is the most common cause of runs sticking in `pending`.
+`SHIPFOX_RUNNER_LABELS` is a comma-separated list (e.g. `linux,x64,self-hosted`). A job is dispatched to a runner only when the runner has **all** the labels listed in the workflow's `runner:` field. Make sure your runner's labels match exactly what your workflows declare — a mismatch is the most common cause of runs sticking in `pending`.
 
 ## Self-hosted deployment
 
