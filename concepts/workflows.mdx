@@ -53,7 +53,7 @@ Shipfox scans `.shipfox/workflows/` in your connected repository for workflow de
 
 A few rules to keep in mind:
 
-- **Subdirectories are not scanned.** All workflow files must be placed directly under `.shipfox/workflows/`. A file at `.shipfox/workflows/ci/build.yml` will not be picked up.
+- **Any `.yml` or `.yaml` file under `.shipfox/workflows/` is picked up.** Files are matched by path prefix and extension, so nested paths such as `.shipfox/workflows/ci/build.yml` are scanned too.
 - **The filename is not the workflow name.** The human-readable name comes from the top-level `name:` field inside the file. You can name the file anything you like.
 - **Both `.yml` and `.yaml` extensions are accepted.** Pick one and stay consistent for readability.
 
