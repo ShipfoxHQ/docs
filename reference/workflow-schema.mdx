@@ -72,6 +72,10 @@ This page is the authoritative reference for the Shipfox workflow YAML schema. W
   A CEL expression that decides whether the job succeeded once all its executions settle, with `executions` (a list of `{index, status}`) in scope. Defaults to all executions succeeding. See [Expressions](/reference/expressions#job-success--success).
 </ParamField>
 
+<ParamField body="checkout" type="object">
+  Declares the job's repository-checkout intent: `permissions.contents` (`read` or `write`, default `read`) and `persist-credentials` (boolean, default `true` — keep the checkout credential available to later steps). Omit the block for a read-only checkout with persisted credentials.
+</ParamField>
+
 <ParamField body="listening" type="object">
   Turns the job into a [listening job](/concepts/listening-jobs) that reacts to events inside the run (🚧 coming soon — the field parses and validates, but listening jobs do not execute yet).
 </ParamField>
