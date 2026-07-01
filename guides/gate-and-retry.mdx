@@ -38,7 +38,7 @@ jobs:
             restart_from: install
 ```
 
-On each iteration, the agent reads the updated codebase and attempts another fix. The loop continues until `npm test` exits `0`. If the job's `execution_timeout` is reached before the condition is met, the job fails.
+On each iteration, the agent reads the updated codebase and attempts another fix. The loop continues until `npm test` exits `0`. The loop is **bounded automatically**: a gating step gets 3 attempts by default before its restart budget is exhausted and the job stops. The job-level `execution_timeout` adds a second, outer bound — see [Loop bounds](/concepts/gates#loop-bounds).
 
 ## success_if expressions
 
@@ -65,7 +65,7 @@ More CEL variables (stdout content, step duration, etc.) are planned for future 
 
 ## Job execution timeout
 
-Gates create loops. Without a timeout, a loop where the agent never converges on a fix will run until the workflow is cancelled manually. Set `execution_timeout` on the job to establish an upper bound:
+A gating step already stops after a bounded number of restarts (3 by default). On top of that, `execution_timeout` sets an **outer wall-clock bound** on the whole job — useful when steps are slow and even a few attempts could run long:
 
 ```yaml
 jobs:

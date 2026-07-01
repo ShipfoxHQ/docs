@@ -22,8 +22,12 @@
             "pages": [
               "concepts/workflows",
               "concepts/jobs-steps",
+              "concepts/gates",
               "concepts/triggers",
-              "concepts/runners"
+              "concepts/runners",
+              "concepts/runner-provisioners",
+              "concepts/logging",
+              "concepts/event-driven-jobs"
             ]
           },
           {
@@ -55,6 +59,7 @@
               "reference/workflow-schema",
               "reference/trigger-sources",
               "reference/step-types",
+              "reference/model-providers",
               "reference/glossary"
             ]
           },

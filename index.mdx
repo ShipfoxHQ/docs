@@ -28,22 +28,28 @@ Workflows live in `.shipfox/workflows/` as YAML files, versioned and reviewed al
 ## Key features
 
 <CardGroup cols={2}>
-  <Card title="YAML Workflows in Your Repo" icon="check">
+  <Card title="YAML Workflows in Your Repo" icon="code-branch" href="/concepts/workflows">
     Workflows live under `.shipfox/workflows/`, versioned and reviewed like any code.
   </Card>
-  <Card title="AI Agent Steps" icon="check">
+  <Card title="AI Agent Steps" icon="robot" href="/concepts/jobs-steps">
     Any step can run an AI agent: pick a model, write a prompt, and Shipfox does the rest.
   </Card>
-  <Card title="Your Own Runners" icon="check">
+  <Card title="Gates & Retry Loops" icon="rotate" href="/concepts/gates">
+    Gate a step on its exit code and `restart_from` an earlier step — bounded loops, no scripting.
+  </Card>
+  <Card title="Live & Agent Logs" icon="terminal" href="/concepts/logging">
+    Tail every step live; agent steps show messages, thinking, and tool calls as structured events.
+  </Card>
+  <Card title="Your Own Runners" icon="server" href="/concepts/runners">
     Jobs execute on runners you register and control — no vendor lock-in on compute.
   </Card>
-  <Card title="Smart Triggers" icon="check">
-    Push events, Sentry alerts, or on-demand fire start your pipelines.
+  <Card title="Autoscaling Provisioners" icon="layer-group" href="/concepts/runner-provisioners">
+    A provisioner starts ephemeral, single-job runners on demand and lets them exit when idle.
   </Card>
-  <Card title="Gate & Retry" icon="check">
-    Use CEL expressions and `restart_from` to loop until a condition is met.
+  <Card title="Smart Triggers" icon="bolt" href="/integrations/overview">
+    GitHub pushes, Sentry issues, custom webhooks, or on-demand fire start your pipelines.
   </Card>
-  <Card title="30+ Model Providers" icon="check">
+  <Card title="30+ Model Providers" icon="sparkles" href="/reference/model-providers">
     Anthropic, OpenAI, DeepSeek, xAI, Google, Mistral, and more.
   </Card>
 </CardGroup>

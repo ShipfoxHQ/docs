@@ -8,41 +8,12 @@ Shipfox agent steps can use any of 30+ supported AI model providers. You configu
 
 ## Supported providers
 
-The table below lists all currently supported providers, their ID as used in the `provider` field, and the default model that is used when no `model` is specified.
+Shipfox supports 30+ providers — Anthropic, OpenAI, Azure OpenAI, DeepSeek, Google,
+xAI, Mistral, Groq, OpenRouter, and many more. Each has a `provider` ID and a default
+model used when a step doesn't name one.
 
-| Provider | `provider` ID | Default model |
-|---|---|---|
-| Anthropic | `anthropic` | `claude-opus-4-8` |
-| OpenAI | `openai` | `gpt-5.5-pro` |
-| Azure OpenAI | `azure-openai-responses` | `gpt-5.5-pro` |
-| DeepSeek | `deepseek` | `deepseek-v4-pro` |
-| Google AI Studio | `google` | `gemini-3.1-pro-preview` |
-| xAI | `xai` | `grok-4.3` |
-| Mistral | `mistral` | `mistral-large-latest` |
-| Groq | `groq` | `openai/gpt-oss-120b` |
-| Cerebras | `cerebras` | `gpt-oss-120b` |
-| OpenRouter | `openrouter` | `anthropic/claude-opus-4.8` |
-| Vercel AI Gateway | `vercel-ai-gateway` | `anthropic/claude-opus-4.8` |
-| Cloudflare AI Gateway | `cloudflare-ai-gateway` | `claude-opus-4-8` |
-| Cloudflare Workers AI | `cloudflare-workers-ai` | `@cf/moonshotai/kimi-k2.7-code` |
-| Hugging Face | `huggingface` | `deepseek-ai/DeepSeek-V4-Pro` |
-| Together AI | `together` | `deepseek-ai/DeepSeek-V4-Pro` |
-| Fireworks | `fireworks` | `accounts/fireworks/models/deepseek-v4-pro` |
-| NVIDIA | `nvidia` | `nvidia/nemotron-3-ultra-550b-a55b` |
-| Ant Ling | `ant-ling` | `Ring-2.6-1T` |
-| OpenCode | `opencode` | `claude-opus-4-8` |
-| OpenCode Go | `opencode-go` | `kimi-k2.7-code` |
-| Z.ai | `zai` | `glm-5.2` |
-| Z.ai Coding CN | `zai-coding-cn` | `glm-5.2` |
-| Kimi Coding | `kimi-coding` | `k2p7` |
-| MiniMax | `minimax` | `MiniMax-M3` |
-| MiniMax CN | `minimax-cn` | `MiniMax-M3` |
-| Moonshot AI | `moonshotai` | `kimi-k2.7-code` |
-| Moonshot AI CN | `moonshotai-cn` | `kimi-k2.7-code` |
-| Xiaomi | `xiaomi` | `mimo-v2.5-pro` |
-| Xiaomi Token Plan CN | `xiaomi-token-plan-cn` | `mimo-v2.5-pro` |
-| Xiaomi Token Plan AMS | `xiaomi-token-plan-ams` | `mimo-v2.5-pro` |
-| Xiaomi Token Plan SGP | `xiaomi-token-plan-sgp` | `mimo-v2.5-pro` |
+See the [Model Providers reference](/reference/model-providers) for the complete
+table of every provider, its ID, and its default model.
 
 ## Configure a provider
 

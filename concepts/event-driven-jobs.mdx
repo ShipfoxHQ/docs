@@ -1,0 +1,84 @@
+---
+title: "Event-Driven Jobs (Preview)"
+sidebarTitle: "Event-Driven Jobs"
+description: "A preview of listening jobs — jobs that react to a stream of events and stop on a terminating condition. The schema is authorable today; execution is on the roadmap."
+---
+
+<Warning>
+  **Roadmap preview.** The `listening` job schema below is accepted and validated
+  today — you can author it and it will parse — but Shipfox does **not execute
+  listening jobs yet**. A listening job currently acts as a scheduling boundary:
+  it doesn't run, and non-listening jobs that depend on it stay blocked. Don't rely
+  on this in production until execution ships. This page documents the authored
+  shape so you can follow along.
+</Warning>
+
+Most jobs run once when a trigger fires. An **event-driven job** instead *listens*:
+it reacts to a stream of events over time and stops when a terminating condition is
+met. The intent is to model long-lived reactions — draining a queue of events,
+watching a resource until it settles — inside a single job.
+
+## The `listening` shape
+
+A job becomes event-driven by adding a `listening` block:
+
+```yaml
+jobs:
+  watch_deploys:
+    listening:
+      on:
+        - source: deploy_hook
+          event: webhook.received
+      until:
+        - source: deploy_hook
+          event: webhook.received
+          filter: event.body.status == "stable"
+      timeout: "1h"
+      max_executions: 20
+      batch:
+        debounce: "5s"
+        max_size: 10
+        max_wait: "1m"
+      on_resolve: finish
+    steps:
+      - run: ./reconcile.sh
+```
+
+<ParamField path="listening.on" type="trigger[]" required>
+  The events the job listens for. Each entry uses the same `{source, event,
+  filter?, with?}` shape as a workflow [trigger](/concepts/triggers).
+</ParamField>
+
+<ParamField path="listening.until" type="trigger[]">
+  Events that end the listening job. When one arrives, the job resolves.
+</ParamField>
+
+<ParamField path="listening.timeout" type="string">
+  Maximum wall-clock time to keep listening before the job resolves.
+</ParamField>
+
+<ParamField path="listening.max_executions" type="number">
+  Caps how many times the job reacts before it resolves.
+</ParamField>
+
+<ParamField path="listening.batch" type="object">
+  Aggregates bursts of events: `debounce` (quiet window before reacting),
+  `max_size` (events per batch), and `max_wait` (longest a batch waits before
+  flushing).
+</ParamField>
+
+<ParamField path="listening.on_resolve" type="'finish' | 'cancel'">
+  What happens when `until` fires: `finish` completes the job normally (default),
+  `cancel` cancels it.
+</ParamField>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Triggers" icon="bolt" href="/concepts/triggers">
+    The trigger shape reused by `on` and `until`.
+  </Card>
+  <Card title="Integrations" icon="plug" href="/integrations/overview">
+    The sources that emit the events a listening job reacts to.
+  </Card>
+</CardGroup>
