@@ -6,7 +6,7 @@
 
 - [Introduction](/introduction): What Shipfox is, how it works, and what you can build with agentic workflows.
 - [Quick Start](/getting-started): Connect a project, add a workflow YAML, register a runner, and fire your first run.
-- [Installation](/installation): Run Shipfox locally with Docker Compose or deploy self-hosted with PostgreSQL, a workflow orchestration service, and S3-compatible object storage.
+- [Installation](/installation): Run Shipfox locally with Docker Compose or deploy self-hosted with PostgreSQL, Temporal, and S3-compatible object storage.
 - [Workflows](/concepts/workflows): The YAML workflow file format, top-level fields, env variables, and file location conventions.
 - [Jobs & Steps](/concepts/jobs-steps): How jobs group steps, job isolation, run steps, agent steps, and the gate block.
 - [Triggers](/concepts/triggers): What starts a run: manual, GitHub push, Sentry issue, and the filter field.
