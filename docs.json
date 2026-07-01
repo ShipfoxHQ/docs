@@ -43,6 +43,7 @@
             "group": "Guides",
             "pages": [
               "guides/checks-on-push",
+              "guides/triage-sentry-issues",
               "guides/agent-steps",
               "guides/gate-and-retry",
               "guides/multi-job-pipeline",
