@@ -1,7 +1,7 @@
 ---
-title: "Triggers: What Starts a Shipfox Workflow Run"
+title: "Triggers: How and When Shipfox Workflow Runs Start"
 sidebarTitle: "Triggers"
-description: "Triggers define when a Shipfox workflow runs — on a push, a Sentry issue, a schedule, or on demand. Learn the trigger schema and which sources are supported today."
+description: "Triggers define when a Shipfox workflow runs — on a push, a Sentry issue, or on demand. Learn the trigger schema and which sources are supported."
 ---
 
 A **trigger** tells Shipfox when to start a workflow run. Triggers are defined in your workflow YAML under the `triggers:` key. You can have multiple triggers; each is a named entry with a `source` and `event`. Today, three sources are supported: GitHub pushes, Sentry issues, and manual (on-demand) fire.

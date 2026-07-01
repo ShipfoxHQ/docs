@@ -22,6 +22,10 @@ A run step executes a shell command on the job's runner. It has access to enviro
   Environment variables for this step. Merged with job-level and workflow-level env; step-level values take the highest precedence. Keys must follow POSIX-style naming (`[A-Za-z_][A-Za-z0-9_]*`). Values may be strings, numbers, or booleans.
 </ParamField>
 
+<ParamField body="key" type="string">
+  Optional stable identifier for this step. Useful for referencing the step programmatically. Must be at least one character.
+</ParamField>
+
 <ParamField body="gate" type="object">
   Gate and retry configuration evaluated after the step completes. See [Gate block](#gate-block) below.
 </ParamField>
@@ -59,6 +63,10 @@ An agent step invokes an AI model with a text prompt. The model reads the reposi
 
 <ParamField body="name" type="string">
   Optional step name, displayed in the dashboard log.
+</ParamField>
+
+<ParamField body="key" type="string">
+  Optional stable identifier for this step. Must be at least one character.
 </ParamField>
 
 <ParamField body="gate" type="object">
@@ -102,6 +110,7 @@ The following table summarises which fields are valid on each step kind. Mixing 
 | `provider` | ❌ Not allowed | ✅ Optional |
 | `env` | ✅ Optional | ❌ Not allowed |
 | `name` | ✅ Optional | ✅ Optional |
+| `key` | ✅ Optional | ✅ Optional |
 | `gate` | ✅ Optional | ✅ Optional |
 
 <Warning>

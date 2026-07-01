@@ -1,7 +1,7 @@
 ---
-title: "Shipfox: Agentic Workflows for Engineering Teams"
+title: "Shipfox: Agentic CI/CD Workflows for Engineering Teams"
 sidebarTitle: "Home"
-description: "Shipfox is a continuous shipping platform. Define YAML workflows in your repo, run shell and AI agent steps, and trigger pipelines from the tools you already use."
+description: "Shipfox is a continuous shipping platform. Define YAML workflows in your repo, run shell and AI agent steps, and trigger pipelines from the tools you use."
 ---
 
 Shipfox is a continuous shipping platform built for engineering teams who want automation that keeps pace with modern development. You define YAML workflows directly in your repository, run shell commands and AI agent steps as first-class citizens, and execute everything on runners you own and control. This documentation covers everything you need — from connecting your first project to authoring advanced agentic pipelines.
@@ -23,7 +23,7 @@ Shipfox is a continuous shipping platform built for engineering teams who want a
 
 ## What is Shipfox?
 
-Workflows live in `.shipfox/workflows/` as YAML files, versioned and reviewed alongside the rest of your code. A trigger — such as a GitHub push, a Sentry alert, a schedule, or an on-demand call — starts a run. Each run is composed of jobs, which are logical groups of steps. A step is either a `run` command (plain shell) or an agent step that pairs a `model` with a `prompt`. AI agents are first-class citizens in Shipfox, not an afterthought bolted on later — any step in any job can invoke an AI model from 30+ supported providers.
+Workflows live in `.shipfox/workflows/` as YAML files, versioned and reviewed alongside the rest of your code. A trigger — such as a GitHub push, a Sentry alert, or an on-demand call — starts a run. Each run is composed of jobs, which are logical groups of steps. A step is either a `run` command (plain shell) or an agent step that pairs a `model` with a `prompt`. AI agents are first-class citizens in Shipfox, not an afterthought bolted on later — any step in any job can invoke an AI model from 30+ supported providers.
 
 ## Key features
 
@@ -38,10 +38,10 @@ Workflows live in `.shipfox/workflows/` as YAML files, versioned and reviewed al
     Jobs execute on runners you register and control — no vendor lock-in on compute.
   </Card>
   <Card title="Smart Triggers" icon="check">
-    Push events, Sentry alerts, schedules, or on-demand fire start your pipelines.
+    Push events, Sentry alerts, or on-demand fire start your pipelines.
   </Card>
   <Card title="Gate & Retry" icon="check">
-    Use CEL expressions and `restart_from` to loop until a condition is met.
+    Use CEL expressions and `restart_from` to retry a step until a condition is met.
   </Card>
   <Card title="30+ Model Providers" icon="check">
     Anthropic, OpenAI, DeepSeek, xAI, Google, Mistral, and more.
@@ -69,6 +69,8 @@ Workflows live in `.shipfox/workflows/` as YAML files, versioned and reviewed al
         steps:
           - run: echo "hello world"
     ```
+
+    Push triggers (`source: github, event: push`) require a connected GitHub repository. For local evaluation or non-GitHub repos, use a manual trigger as shown above.
   </Step>
   <Step title="Register a runner">
     Generate a registration token in the Shipfox dashboard, then start a runner on your own infrastructure using the matching label. The runner will connect and begin polling for jobs.

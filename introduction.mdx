@@ -1,5 +1,5 @@
 ---
-title: "What is Shipfox? Agentic Workflows Platform"
+title: "Introduction to Shipfox: Agentic Workflow Automation"
 sidebarTitle: "Introduction"
 description: "Shipfox runs YAML workflows from your repo, treats AI agents as first-class steps, and makes GitHub pushes and Sentry issues native triggers — no glue."
 ---
@@ -13,7 +13,7 @@ Shipfox is a continuous shipping platform built for engineering teams who want a
     Write a YAML file under `.shipfox/workflows/` in your repository. Commit and push — Shipfox picks it up automatically without any manual import step.
   </Step>
   <Step title="Configure a trigger">
-    Choose when the workflow runs: on a GitHub push, a Sentry issue, a schedule, or on demand directly from the dashboard. Each trigger is a named entry under the `triggers` key in your workflow YAML.
+    Choose when the workflow runs: on a GitHub push, a Sentry issue, or on demand directly from the dashboard. Each trigger is a named entry under the `triggers` key in your workflow YAML.
   </Step>
   <Step title="Jobs run on your runners">
     Each job executes on a runner you register with Shipfox. Jobs are fully isolated — each one re-clones the repository before executing, so no state bleeds between runs.

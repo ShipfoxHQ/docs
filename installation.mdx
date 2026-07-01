@@ -4,7 +4,7 @@ sidebarTitle: "Installation"
 description: "Run Shipfox locally with Docker Compose for evaluation, or deploy it to your own infrastructure. Covers stack setup, runner registration, and first run."
 ---
 
-Shipfox can be self-hosted on your own infrastructure or run in evaluation mode locally using Docker Compose. Evaluation mode spins up the full Shipfox stack — API, dashboard, PostgreSQL, Temporal, Gitea, and object storage — on your machine in a few commands so you can explore the platform without a cloud account. If someone else already manages your Shipfox instance, you can skip this page entirely and jump straight to [Getting Started](/getting-started).
+Shipfox can be self-hosted on your own infrastructure or run in evaluation mode locally using Docker Compose. Evaluation mode spins up the full Shipfox stack — API, dashboard, PostgreSQL, workflow orchestration, a bundled Git server, and S3-compatible object storage — on your machine in a few commands so you can explore the platform without a cloud account. If someone else already manages your Shipfox instance, you can skip this page entirely and jump straight to [Getting Started](/getting-started).
 
 ## Evaluation mode (local)
 
@@ -33,16 +33,6 @@ Shipfox can be self-hosted on your own infrastructure or run in evaluation mode 
 
     `mise` installs the exact Node, pnpm, and toolchain versions pinned in `.mise.toml`. If you don't use `mise`, ensure your system Node and pnpm match the versions listed in that file.
   </Step>
-  <Step title="Build packages">
-    Build the packages the API and dashboard depend on. Run these two commands in order:
-
-    ```bash
-    turbo build --filter=@shipfox/vite
-    turbo build --filter=@shipfox/api...
-    ```
-
-    The first command builds shared UI primitives; the second builds everything the API transitively depends on. Both are incremental — re-running after a code change only rebuilds what changed.
-  </Step>
   <Step title="Start infrastructure services">
     Bring up the Docker Compose stack:
 
@@ -55,9 +45,9 @@ Shipfox can be self-hosted on your own infrastructure or run in evaluation mode 
     | Service | Purpose |
     |---|---|
     | PostgreSQL | Primary database for Shipfox state |
-    | Temporal | Workflow orchestration engine used internally by Shipfox |
-    | Gitea | Local Git hosting (simulates GitHub for local push triggers) |
-    | Object storage (MinIO) | Stores step log artifacts and workflow files |
+    | Workflow orchestration service | Manages run execution and retries internally |
+    | Bundled Git server (seeding demo repos) | Local Git hosting for push-trigger testing without a real GitHub repo |
+    | S3-compatible object storage | Stores step log artifacts and workflow files |
 
     A demo repository `shipfox/demo` is seeded automatically. You can connect this repository to a project for your first run without needing a real GitHub repo.
   </Step>
@@ -78,21 +68,25 @@ Shipfox can be self-hosted on your own infrastructure or run in evaluation mode 
     A runner is required to execute jobs. Follow these steps to register one:
 
     1. Open the dashboard at `http://localhost:5173` and create a **workspace**.
-    2. Inside the workspace, create a **project** and connect it to the `shipfox/demo` Gitea repository.
+    2. Inside the workspace, create a **project** and connect it to the demo repository.
     3. Navigate to **Settings → Runners → Registration tokens** and click **Create token**.
-    4. Copy the token, then start a runner process — substituting your token and choosing labels that include `ubuntu-latest` and `node-22`:
+    4. Copy the token. The runner process reads its configuration from environment variables. Start it by setting the three required variables and running the runner binary:
 
     ```bash
-    npx @shipfox/runner start \
-      --token <YOUR_REGISTRATION_TOKEN> \
-      --labels ubuntu-latest,node-22 \
-      --api-url http://localhost:16101
+    SHIPFOX_API_URL=http://localhost:16101 \
+    SHIPFOX_RUNNER_REGISTRATION_TOKEN=<YOUR_REGISTRATION_TOKEN> \
+    SHIPFOX_RUNNER_LABELS=ubuntu-latest,node-22 \
+    node ./apps/runner/dist/index.js
     ```
 
     The runner will appear as **Online** in the dashboard within a few seconds.
+
+    <Note>
+      To poll indefinitely (so the runner does not exit after the default 5-minute idle window), add `SHIPFOX_POLL_MAX_DURATION_MS=0` to the environment before starting the runner.
+    </Note>
   </Step>
   <Step title="Fire your first run">
-    Create a workflow file in the `shipfox/demo` repository that uses a manual trigger — for example:
+    Create a workflow file in the demo repository that uses a manual trigger — for example:
 
     ```yaml
     name: First run
@@ -107,7 +101,7 @@ Shipfox can be self-hosted on your own infrastructure or run in evaluation mode 
           - run: echo "Shipfox is running!"
     ```
 
-    Commit and push the file to the Gitea repo, then open the project dashboard and click **Run now** next to the workflow. Watch the logs stream live in the run detail view.
+    Commit and push the file to the demo repo, then open the project dashboard and click **Run now** next to the workflow. Watch the logs stream live in the run detail view.
   </Step>
 </Steps>
 
@@ -127,16 +121,22 @@ To register a new runner:
 
 1. In the Shipfox dashboard, navigate to **Settings → Runners → Registration tokens**.
 2. Click **Create token** and copy the generated token — it is shown only once.
-3. Start the runner on your target machine, passing the token and one or more comma-separated labels:
+3. Start the runner process on your target machine by setting the required environment variables. The runner does not use CLI flags — all configuration is passed through the environment:
 
 ```bash
-npx @shipfox/runner start \
-  --token <YOUR_REGISTRATION_TOKEN> \
-  --labels <LABEL_1>,<LABEL_2> \
-  --api-url <YOUR_SHIPFOX_API_URL>
+SHIPFOX_API_URL=<YOUR_SHIPFOX_API_URL> \
+SHIPFOX_RUNNER_REGISTRATION_TOKEN=<YOUR_REGISTRATION_TOKEN> \
+SHIPFOX_RUNNER_LABELS=<LABEL_1>,<LABEL_2> \
+<runner-start-command>
 ```
 
 Labels are arbitrary strings (e.g. `ubuntu-latest`, `node-22`, `gpu`, `production`). A job is dispatched to a runner when the runner has **all** the labels listed in the workflow's `runner:` field. Make sure your runner's labels match exactly what your workflows declare — a mismatch is the most common cause of runs sticking in `pending`.
+
+For runners that should poll indefinitely rather than exit after the default idle window, also set:
+
+```bash
+SHIPFOX_POLL_MAX_DURATION_MS=0
+```
 
 ## Self-hosted deployment
 
@@ -145,7 +145,6 @@ For a production self-hosted deployment you need to provision and connect the fo
 | Service | Recommended options |
 |---|---|
 | PostgreSQL | Any managed PostgreSQL 15+ instance (RDS, Cloud SQL, Supabase, self-managed) |
-| Temporal | Self-hosted Temporal cluster or Temporal Cloud |
 | Object storage | Any S3-compatible service (AWS S3, GCS with interop, MinIO, Cloudflare R2) |
 
 The Shipfox API and dashboard are stateless processes that can be deployed as containers on any compute platform (Kubernetes, ECS, Fly.io, bare VMs). The runner is a separate process you deploy on the compute where jobs should execute — it does not need to be co-located with the API.

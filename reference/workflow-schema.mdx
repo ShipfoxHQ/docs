@@ -86,6 +86,10 @@ A step is either a **run step** or an **agent step**. The two kinds share one st
   Displayed in the dashboard log. Required if this step is referenced by `restart_from` in a gate block.
 </ParamField>
 
+<ParamField body="key" type="string">
+  Optional stable identifier for this step. Useful for referencing the step programmatically. Must be at least one character.
+</ParamField>
+
 <ParamField body="env" type="object">
   Step-level environment variables. Merged with job and workflow env; step-level values take the highest precedence.
 </ParamField>
@@ -116,6 +120,10 @@ A step is either a **run step** or an **agent step**. The two kinds share one st
   Optional step name, displayed in the dashboard log.
 </ParamField>
 
+<ParamField body="key" type="string">
+  Optional stable identifier for this step. Must be at least one character.
+</ParamField>
+
 <ParamField body="gate" type="object">
   Gate and retry configuration. See [Gate fields](#gate-fields) below.
 </ParamField>
@@ -141,7 +149,7 @@ A gate block must contain at least one of `success_if` or `on_failure`.
 <Warning>
   The schema is strict. Every one of these rules is enforced at parse time — violating any of them produces a typed validation error.
 
-  - **Unknown keys are rejected everywhere.** All schema objects use `strictObject`; any unrecognised key is an error.
+  - **Unknown keys are rejected everywhere.** The schema is strict; any unrecognised key is an error.
   - **A step must define `run` OR `prompt` — never both, never neither.** A step with none of `run`, `prompt`, `model`, `thinking`, or `provider` is invalid.
   - **`model`, `thinking`, and `provider` are invalid on a run step.** They may only appear alongside `prompt`.
   - **`env` is invalid on an agent step.** Workflow-level and job-level env is not applied to agent steps either.

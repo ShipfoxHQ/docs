@@ -1,7 +1,7 @@
 ---
 title: "Shipfox Glossary: Key Terms and Concepts"
 sidebarTitle: "Glossary"
-description: "Definitions for every Shipfox term: workspace, project, workflow, run, job, step, trigger, runner, gate, and more. Use as a quick reference."
+description: "Definitions for every Shipfox term: workspace, project, workflow, run, job, step, trigger, runner, gate, CEL, filter, key, and more. Quick reference."
 ---
 
 This glossary defines every term used in Shipfox documentation and in the product UI. When a concept is introduced elsewhere in the docs, it links back here.
@@ -12,12 +12,24 @@ This glossary defines every term used in Shipfox documentation and in the produc
     A workflow step that invokes an AI model. Defined with `prompt` (required), plus optional `model`, `thinking`, and `provider` fields. The model reads the repository context and executes the prompt. Agent steps cannot carry `env` — use a run step for environment-dependent shell work. See the [Step Types reference](/reference/step-types#agent-step).
   </Accordion>
 
+  <Accordion title="CEL">
+    Common Expression Language — a lightweight expression language used in Shipfox for trigger filters (`filter`) and step success conditions (`success_if`). CEL expressions are type-safe, side-effect-free, and sandboxed. In `success_if`, the variable `exit_code` (integer) is available. In `filter`, the variable `event` carries the event payload. See the [CEL specification](https://cel.dev) for syntax details.
+  </Accordion>
+
+  <Accordion title="Filter">
+    An optional CEL expression on a trigger that is intended to narrow which events fire the workflow. For example, `event.ref == "main"` on a GitHub push trigger would restrict to pushes on the `main` branch. Today, `filter` is parsed and stored but is **not yet evaluated at runtime** — the trigger fires on every matching `(source, event)` pair regardless of filter content. Authoring a filter is safe and will take effect once evaluation is enabled. See the [Trigger Sources reference](/reference/trigger-sources#filter-not-enforced).
+  </Accordion>
+
   <Accordion title="Gate">
-    A condition block attached to a step that controls success evaluation and failure recovery. The `success_if` field accepts a CEL expression over `exit_code`. The `on_failure.restart_from` field names an earlier step in the same job to restart from when the gate fails. A gate must contain at least one of `success_if` or `on_failure`. See [Gate block](/reference/step-types#gate-block).
+    A condition block attached to a step that controls success evaluation and failure recovery. The `success_if` field accepts a CEL expression over `exit_code`. The `on_failure.restart_from` field names an earlier step in the same job to restart from when the gate fails. The `on_failure.output` field provides a message to surface in the run log on failure. A gate must contain at least one of `success_if` or `on_failure`. See [Gate block](/reference/step-types#gate-block).
   </Accordion>
 
   <Accordion title="Job">
     A group of steps that runs on a single runner. Jobs within a workflow run in parallel by default; use `needs` to declare dependencies and sequence them. Each job re-clones the repository independently. A job must have at least one step. See [Job fields](/reference/workflow-schema#job-fields).
+  </Accordion>
+
+  <Accordion title="Key (step field)">
+    An optional stable identifier on a step, set with the `key` field. Unlike `name` (which is a display label), `key` is intended for programmatic reference — for example, identifying a step when integrating with the Shipfox API. Must be at least one character. Valid on both run steps and agent steps.
   </Accordion>
 
   <Accordion title="Model">
