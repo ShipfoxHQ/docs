@@ -113,6 +113,30 @@ Setup steps and the full event list for each source live on its integration page
   roadmap.
 </Note>
 
+## Coming soon
+
+Two trigger capabilities are under active development:
+
+**Cron triggers** — run a workflow on a recurring schedule, declared in the YAML
+like any other trigger. The design: `source: cron`, `event: tick`, a raw 5-field
+cron `schedule` (minute granularity), and an optional IANA `timezone` (UTC by
+default). A tick fires the latest definition on the default branch; missed ticks
+are skipped, not backfilled.
+
+```yaml
+# Coming soon — syntax may still evolve before release.
+triggers:
+  nightly:
+    source: cron
+    event: tick
+    schedule: "0 2 * * *"
+    timezone: "Europe/Paris"
+```
+
+**Job-level listening** — the same `{source, event}` selector shape, used on a job
+(`listening.on` / `listening.until`) so it reacts to events repeatedly inside one
+run. See [Listening Jobs](/concepts/listening-jobs).
+
 ## Related pages
 
 <CardGroup cols={2}>

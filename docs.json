@@ -27,7 +27,7 @@
               "concepts/runners",
               "concepts/runner-provisioners",
               "concepts/logging",
-              "concepts/event-driven-jobs"
+              "concepts/listening-jobs"
             ]
           },
           {
