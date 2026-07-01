@@ -12,40 +12,11 @@ specific platform, see [AWS](/installation/aws) or [Kubernetes](/installation/ku
 
 ## What you run, and what talks to what
 
-```mermaid
-flowchart TB
-  subgraph SRC["Event sources"]
-    GH2["GitHub"]
-    SEN2["Sentry"]
-    WH2["Any system — webhook"]
-  end
-  subgraph CP2["Shipfox control plane — stateless containers you deploy"]
-    API["API"]
-    DASH["Dashboard"]
-  end
-  subgraph DEPS["Managed dependencies"]
-    PG[("PostgreSQL")]
-    TMP["Temporal"]
-    OBJ[("S3-compatible object storage")]
-  end
-  subgraph YC["Your compute — where jobs run"]
-    RN["Runners"]
-    PV["Provisioner — optional autoscaling"]
-  end
-  MP["Model providers — Anthropic, OpenAI, 30+"]
-  GH2 -->|webhooks| API
-  SEN2 -->|webhooks| API
-  WH2 -->|POST| API
-  DASH --> API
-  API --> PG
-  API --> TMP
-  API --> OBJ
-  RN -->|"outbound poll — no inbound access to your infra"| API
-  PV -->|"polls demand"| API
-  PV -->|"starts ephemeral runners"| RN
-  RN -->|"clones the repository"| GH2
-  RN -->|"agent steps call out with your API keys"| MP
-```
+{/* Source: images/diagrams/deployment-topology.mmd — regenerate with:
+    npx -y @mermaid-js/mermaid-cli -b white -i images/diagrams/deployment-topology.mmd -o images/diagrams/deployment-topology.svg */}
+<Frame caption="Deployment topology — click to enlarge.">
+  <img src="/images/diagrams/deployment-topology.svg" alt="Deployment topology: event sources send webhooks into the Shipfox API; the control plane containers connect to PostgreSQL, Temporal, and S3-compatible object storage; runners and an optional provisioner on your compute connect outbound only, clone the repository, and call model providers with your API keys" />
+</Frame>
 
 Two directions matter: **runners only connect outward** — you never open an inbound
 port into your compute — and **agent traffic to model providers leaves from your
