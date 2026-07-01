@@ -68,7 +68,7 @@ Logs move through two phases:
    seconds of it being produced.
 2. **Cold (persisted).** Once a step's stream closes, Shipfox compacts the logs
    into a single compressed file in object storage (the garage / S3 bucket from
-   [installation](/installation)). Later reads are served directly from storage.
+   [installation](/installation/self-hosting)). Later reads are served directly from storage.
 
 This is transparent in the dashboard — you don't choose a phase; the run detail
 view reads whichever is current.
@@ -96,7 +96,7 @@ Logs are bounded so a runaway step can't produce unbounded storage or cost:
 
 <Note>
   The budget, retention window, and storage bucket are configurable when you
-  self-host. See [Installation](/installation) for the object-storage setup.
+  self-host. See [Self-Hosting](/installation/self-hosting) for the object-storage setup.
 </Note>
 
 ## Related pages
