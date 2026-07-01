@@ -50,9 +50,10 @@ This page covers the most common issues teams encounter with Shipfox and how to 
   </Accordion>
 
   <Accordion title="Push trigger not firing">
-    **Cause:** GitHub integration not connected, or repository is on GitLab.
+    **Cause:** GitHub integration not connected, wrong trigger `source`, or repository is on GitLab.
 
     **Fix:**
+    - Open **Settings → Events**. It lists every trigger event the workspace received. If your push appears with **No workflows triggered**, the workflow's `source` does not match the connection's slug (see [Integrations](/integrations/overview#finding-your-connection-slug)). If the push does not appear at all, the webhook never reached Shipfox.
     - In the project settings, verify the GitHub repository is connected.
     - Push triggers only work with GitHub — GitLab is roadmap. Use `source: manual, event: fire` for non-GitHub repos.
     - Verify the GitHub webhook is registered (visible in your GitHub repo's **Settings → Webhooks**).

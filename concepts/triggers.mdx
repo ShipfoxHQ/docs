@@ -39,7 +39,7 @@ triggers:
 
 <ParamField path="filter" type="string">
   A CEL expression that is parsed but **not yet evaluated**. Reserved for future
-  filtering (for example `event.ref == "main"`). Today the trigger fires on every
+  filtering (for example `event.ref == "refs/heads/main"`). Today the trigger fires on every
   matching `(source, event)` pair regardless of this field.
 </ParamField>
 
@@ -102,8 +102,8 @@ Setup steps and the full event list for each source live on its integration page
 ## Notes
 
 <Note>
-  `event.ref` on a GitHub push is the **bare branch name** (for example `main`),
-  not the full Git ref (`refs/heads/main`).
+  `event.ref` on a push is the **full Git ref** (for example `refs/heads/main`),
+  exactly as the provider sends it — not the bare branch name.
 </Note>
 
 <Note>

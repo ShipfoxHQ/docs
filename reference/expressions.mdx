@@ -93,7 +93,7 @@ variable holding the resolved value, so event-derived data can't inject shell sy
 ## Trigger filters are not evaluated yet
 
 A trigger's `filter` also accepts a CEL expression (over the event, e.g.
-`event.ref == "main"`), but it is **parsed and stored, not evaluated** — every
+`event.ref == "refs/heads/main"`), but it is **parsed and stored, not evaluated** — every
 matching `(source, event)` fires the trigger today. See
 [Triggers](/concepts/triggers). To gate on event data now, branch inside a `run`
 step or interpolate the value and check it there.

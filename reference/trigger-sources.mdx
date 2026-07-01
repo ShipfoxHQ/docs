@@ -51,7 +51,7 @@ list per source, and payload details.
 ## filter (not enforced)
 
 The `filter` field accepts a CEL expression intended to narrow which events fire a
-trigger — for example `event.ref == "main"` on a GitHub push. Today `filter` is
+trigger — for example `event.ref == "refs/heads/main"` on a GitHub push. Today `filter` is
 parsed and stored but **not evaluated**: the trigger fires on every matching
 `(source, event)` pair regardless of the expression. Authoring a filter is safe and
 takes effect once evaluation is enabled — no schema change will be required.

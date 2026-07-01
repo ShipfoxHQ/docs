@@ -73,6 +73,10 @@ build · echo "hello world"
 hello world
 ```
 
+<Frame caption="A run detail page: status, the job graph, and every step with its duration.">
+  <img src="/images/run-detail.png" alt="Shipfox run detail page showing a succeeded run with its job graph and step list" />
+</Frame>
+
 <Note>
   A run stuck in `pending` usually means no registered runner matches the `runner:` label in your workflow. Check that a runner with the label `ubuntu-latest` is online and connected. See [Troubleshooting](/troubleshooting) for steps to diagnose runner connectivity.
 </Note>

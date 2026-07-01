@@ -70,20 +70,20 @@ list of events and their payload shapes:
 Shipfox passes the raw GitHub webhook payload to the run. For a `push`, that
 includes the pushed ref, the head commit SHA, and the repository's default branch.
 
-The branch ref is exposed to filters as `event.ref` — the **bare branch name**
-(for example `main`), not the full ref path `refs/heads/main`.
+The branch ref is exposed to filters as `event.ref` — the **full Git ref** (for
+example `refs/heads/main`), exactly as GitHub sends it.
 
 ## Filtering
 
 You can add a `filter` CEL expression to target specific branches or actions — for
-example `event.ref == "main"`:
+example `event.ref == "refs/heads/main"`:
 
 ```yaml
 triggers:
   on_main_push:
     source: github_acme
     event: push
-    filter: event.ref == "main"
+    filter: event.ref == "refs/heads/main"
 ```
 
 <Note>

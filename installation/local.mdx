@@ -60,6 +60,15 @@ platform without any cloud account. For a production deployment, see
     | Object storage (garage) | S3-compatible storage for step-log artifacts |
 
     A demo repository `shipfox/demo` is seeded automatically. You can connect this repository to a project for your first run without needing a real GitHub repo.
+
+    <Note>
+      The stack binds fixed host ports: 5432 (PostgreSQL), 7233 (Temporal), 3000
+      (Gitea HTTP), 2222 (Gitea SSH), and 3900 (object storage S3). If
+      `docker compose up` fails with "port is already allocated", override the
+      conflicting port with the matching variable — `SHIPFOX_POSTGRES_PORT`,
+      `SHIPFOX_TEMPORAL_PORT`, `SHIPFOX_GITEA_HTTP_PORT`, `SHIPFOX_GITEA_SSH_PORT`,
+      or `SHIPFOX_GARAGE_S3_PORT` — before running the command again.
+    </Note>
   </Step>
   <Step title="Start the API and dashboard">
     Open two terminal windows and start the API and dashboard processes:
@@ -90,6 +99,10 @@ platform without any cloud account. For a production deployment, see
     2. **Install source control** — choose **Gitea** and enter the organization `shipfox` (the org seeded by Docker Compose).
     3. **Configure agent provider** — skip this unless you want to run agent steps immediately.
     4. **Create project** — pick a seeded repository such as `shipfox/demo`. The project name is pre-filled from the repository.
+
+    <Frame caption="Create project: pick the source connection, then the repository — the name is pre-filled.">
+      <img src="/images/create-project.png" alt="The create-project form showing the source connection, repository picker, and pre-filled project name" />
+    </Frame>
   </Step>
   <Step title="Register a runner">
     A runner is required to execute jobs. Follow these steps to register one:
@@ -105,6 +118,10 @@ platform without any cloud account. For a production deployment, see
     ```
 
     The runner reads `SHIPFOX_API_URL`, `SHIPFOX_RUNNER_REGISTRATION_TOKEN`, and `SHIPFOX_RUNNER_LABELS` from its environment. Within a few seconds its terminal prints `Runner session registered` — the runner is now polling for jobs. The dashboard does not list connected runners yet; the runner's own log is the place to confirm it is connected.
+
+    <Frame caption="Creating a registration token — the value is shown once, with a copy button.">
+      <img src="/images/runner-registration-token.png" alt="The create registration token dialog on Settings → Runners, showing the one-time token value and copy button" />
+    </Frame>
 
     <Note>
       A runner exits after a default idle window (about 5 minutes). To keep it polling indefinitely during evaluation, add `SHIPFOX_POLL_MAX_DURATION_MS=0` to its environment.

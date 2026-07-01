@@ -39,7 +39,7 @@ This page is the authoritative reference for the Shipfox workflow YAML schema. W
 </ParamField>
 
 <ParamField body="filter" type="string">
-  A CEL expression that narrows which events fire this trigger (e.g., `event.ref == "main"`). The expression is parsed and stored but **not yet evaluated** — the trigger fires on every matching `(source, event)` pair regardless of filter content.
+  A CEL expression that narrows which events fire this trigger (e.g., `event.ref == "refs/heads/main"`). The expression is parsed and stored but **not yet evaluated** — the trigger fires on every matching `(source, event)` pair regardless of filter content.
 </ParamField>
 
 <ParamField body="with" type="object">

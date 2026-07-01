@@ -17,7 +17,7 @@ This glossary defines every term used in Shipfox documentation and in the produc
   </Accordion>
 
   <Accordion title="Filter">
-    An optional CEL expression on a trigger that is intended to narrow which events fire the workflow. For example, `event.ref == "main"` on a GitHub push trigger would restrict to pushes on the `main` branch. Today, `filter` is parsed and stored but is **not yet evaluated at runtime** — the trigger fires on every matching `(source, event)` pair regardless of filter content. Authoring a filter is safe and will take effect once evaluation is enabled. See the [Trigger Sources reference](/reference/trigger-sources#filter-not-enforced).
+    An optional CEL expression on a trigger that is intended to narrow which events fire the workflow. For example, `event.ref == "refs/heads/main"` on a GitHub push trigger would restrict to pushes on the `main` branch. Today, `filter` is parsed and stored but is **not yet evaluated at runtime** — the trigger fires on every matching `(source, event)` pair regardless of filter content. Authoring a filter is safe and will take effect once evaluation is enabled. See the [Trigger Sources reference](/reference/trigger-sources#filter-not-enforced).
   </Accordion>
 
   <Accordion title="Gate">

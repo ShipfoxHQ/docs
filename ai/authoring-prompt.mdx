@@ -37,7 +37,7 @@ restart_from: "<earlier named step>", output?: "<message>" } }. Restarts are cap
 ${{ }} interpolation IS supported in run/env/prompt, resolved at run creation from
 run/trigger/event/inputs context (e.g. ${{ trigger.source }}). Do NOT use (not
 shipped): loop, matrix, branch, structured output, reusable agents. filter isn't
-evaluated yet. event.ref is the bare branch name (e.g. "main").
+evaluated yet. event.ref on a push is the full Git ref (e.g. "refs/heads/main").
 ```
 
 ## How to use it
