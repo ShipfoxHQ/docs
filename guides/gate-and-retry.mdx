@@ -4,7 +4,7 @@ sidebarTitle: "Gate & Retry"
 description: "Use Shipfox gate blocks to evaluate step success with CEL expressions and automatically retry from an earlier named step when a condition fails."
 ---
 
-A **gate** block on a step lets you define a success condition and a retry strategy. When the condition fails, Shipfox restarts execution from an earlier named step in the same job — creating a loop that continues until the condition is met or the job times out. This pattern is especially powerful when paired with agent steps: the agent edits code, a shell step verifies it, and the gate loops back if the verification fails.
+A **gate** block on a step lets you define a success condition and a retry strategy. When the condition fails, Shipfox restarts execution from an earlier named step in the same job — creating a loop that continues until the condition is met or the job times out. Pair it with an agent step and the loop does real work: the agent edits code, a shell step verifies it, and the gate loops back — no scripting.
 
 ## Gate schema
 

@@ -36,10 +36,8 @@ triggers:
     event: issue.created
 ```
 
-<Warning>
-  `source` must be the **connection slug** (for example `sentry_acme`), not the
-  literal word `sentry`.
-</Warning>
+`source` is the connection **slug** (`sentry_acme`), not the word `sentry` — see
+[Finding your connection slug](/integrations/overview#finding-your-connection-slug).
 
 ## Events
 
@@ -92,12 +90,6 @@ jobs:
           Triage this Sentry issue in project ${{ event.projectUrl }}:
           "${{ event.title }}" (${{ event.issueUrl }}). Summarize the likely cause.
 ```
-
-## Filtering
-
-A `filter` CEL expression (for example `event.action == "resolved"`) is parsed but
-**not yet evaluated** — every matching issue event fires the trigger today. Narrow
-inside a step until filter evaluation ships.
 
 ## Related pages
 

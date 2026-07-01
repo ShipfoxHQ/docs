@@ -8,7 +8,7 @@ This guide walks you through creating a Shipfox workflow that runs your test sui
 
 ## What you'll build
 
-You'll create a workflow with two jobs: `checks` and `review`. The `checks` job runs `npm ci && npm test` to validate the codebase on every push. The `review` job declares `needs: checks`, meaning it only starts once `checks` succeeds, and uses an agent step to summarize the diff and flag potential issues. Together they give you both fast mechanical validation and intelligent analysis in one workflow that lives with your code.
+You'll create a workflow with two jobs: `checks` and `review`. The `checks` job runs `npm ci && npm test` to validate the codebase on every push. The `review` job declares `needs: checks`, meaning it only starts once `checks` succeeds, and uses an agent step that reads the repository and flags likely bugs and missing tests — mechanical validation and an agent review, in one workflow that lives with your code.
 
 ## The workflow file
 
@@ -56,7 +56,7 @@ The workflow appears in the Shipfox dashboard immediately after the push. The ne
 
 ## Parallel checks
 
-When lint and tests are independent, running them in parallel cuts wall-clock time. Remove the `needs` relationship between them and let both start immediately, then fan in to the `review` job once both finish:
+When lint and tests are independent, running them in parallel cuts wall-clock time. Split `checks` into independent `lint` and `test` jobs that both start immediately, then fan in to the `review` job once both finish:
 
 ```yaml
 jobs:
