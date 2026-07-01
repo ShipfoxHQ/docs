@@ -1,0 +1,105 @@
+---
+title: "Triggers: What Starts a Shipfox Workflow Run"
+sidebarTitle: "Triggers"
+description: "Triggers define when a Shipfox workflow runs — on a push, a Sentry issue, a schedule, or on demand. Learn the trigger schema and which sources are supported today."
+---
+
+A **trigger** tells Shipfox when to start a workflow run. Triggers are defined in your workflow YAML under the `triggers:` key. You can have multiple triggers; each is a named entry with a `source` and `event`. Today, three sources are supported: GitHub pushes, Sentry issues, and manual (on-demand) fire.
+
+## Trigger schema
+
+Every trigger is a named entry inside the `triggers:` map. The name is an arbitrary key you choose — it appears in logs and the dashboard to identify which trigger fired a run.
+
+```yaml
+triggers:
+  <name>:              # any unique name
+    source: github     # trigger source (see Trigger Sources reference)
+    event: push        # event from that source
+    filter: ""         # optional CEL expression — NOT enforced yet
+    with: {}           # optional extra config
+```
+
+<ParamField path="source" type="string" required>
+  The integration that emits the event. Supported values today: `github`, `sentry`, `manual`. See the [Trigger Sources reference](/reference/trigger-sources) for the full list.
+</ParamField>
+
+<ParamField path="event" type="string" required>
+  The specific event from that source (e.g., `push`, `issue.created`, `fire`). Must be at least one character.
+</ParamField>
+
+<ParamField path="filter" type="string">
+  A CEL expression that is parsed but **not yet evaluated**. Reserved for future filtering (e.g., `event.ref == "main"`). Today the trigger fires on every matching `(source, event)` pair regardless of this field.
+</ParamField>
+
+<ParamField path="with" type="object">
+  Optional extra configuration passed to the trigger source. Contents are source-specific. May be omitted for most sources.
+</ParamField>
+
+## Manual trigger
+
+The simplest trigger requires no external integration. It fires when you click **Run** in the dashboard or call the API endpoint directly.
+
+```yaml
+triggers:
+  on_demand:
+    source: manual
+    event: fire
+```
+
+A workflow can have **at most one** manual trigger. Use it when you want full control over when the workflow runs — for example, release workflows or one-off automation tasks.
+
+## GitHub push trigger
+
+Connect a GitHub repository to your Shipfox project and this trigger fires on every push to the repository.
+
+```yaml
+triggers:
+  on_push:
+    source: github
+    event: push
+```
+
+Requires a GitHub repository connected to the project in Settings → Integrations. You can add a `filter` expression to target specific branches (for example, `event.ref == "main"`), but filter evaluation is not enforced yet — the trigger fires on every push regardless of the filter value.
+
+<Note>
+  `event.ref` is the bare branch name (e.g., `main`), not the full Git ref string (e.g., `refs/heads/main`).
+</Note>
+
+## Sentry issue trigger
+
+React to Sentry activity automatically. When a Sentry event matching the configured type occurs, Shipfox starts a run immediately.
+
+```yaml
+triggers:
+  on_issue:
+    source: sentry
+    event: issue.created
+```
+
+Supported Sentry events:
+
+| Event | Description |
+|---|---|
+| `issue.created` | A new issue is created in Sentry |
+| `issue.resolved` | An issue is marked resolved |
+| `issue.assigned` | An issue is assigned to a team member |
+| `issue.archived` | An issue is archived |
+| `issue.unresolved` | A previously resolved issue regresses |
+
+Requires a Sentry integration configured in your workspace under Settings → Integrations.
+
+<Warning>
+  GitLab push triggers are on the roadmap. If your repository is hosted on GitLab, use `source: manual, event: fire` today and trigger runs from the dashboard or API.
+</Warning>
+
+<Note>
+  `filter` is parsed but not evaluated — your trigger fires on every matching `(source, event)` pair regardless of the filter expression. This behaviour will change in a future release when CEL filter evaluation is enabled.
+</Note>
+
+## Related pages
+
+<CardGroup cols={1}>
+  <Card title="Trigger Sources reference" icon="book" href="/reference/trigger-sources">
+    The full list of supported sources, events, and the `with` options each accepts.
+  </Card>
+</CardGroup>

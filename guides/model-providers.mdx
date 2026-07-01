@@ -1,0 +1,88 @@
+---
+title: "Configure AI Model Providers in Shipfox"
+sidebarTitle: "Model Providers"
+description: "Add API keys for Anthropic, OpenAI, DeepSeek, and 25+ other AI providers in Shipfox. Set a default provider and reference models by ID in your workflow YAML."
+---
+
+Shipfox agent steps can use any of 30+ supported AI model providers. You configure providers once in your workspace settings by adding an API key. Once configured, your workflow YAML can reference any model by its ID and optionally specify the `provider` field — or omit both to fall back to your workspace default.
+
+## Supported providers
+
+The table below lists all currently supported providers, their ID as used in the `provider` field, and the default model that is used when no `model` is specified.
+
+| Provider | `provider` ID | Default model |
+|---|---|---|
+| Anthropic | `anthropic` | `claude-opus-4-8` |
+| OpenAI | `openai` | `gpt-5.5-pro` |
+| Azure OpenAI | `azure-openai-responses` | `gpt-5.5-pro` |
+| DeepSeek | `deepseek` | `deepseek-v4-pro` |
+| Google AI Studio | `google` | `gemini-3.1-pro-preview` |
+| xAI | `xai` | `grok-4.3` |
+| Mistral | `mistral` | `mistral-large-latest` |
+| Groq | `groq` | `openai/gpt-oss-120b` |
+| Cerebras | `cerebras` | `gpt-oss-120b` |
+| OpenRouter | `openrouter` | `anthropic/claude-opus-4.8` |
+| Vercel AI Gateway | `vercel-ai-gateway` | `anthropic/claude-opus-4.8` |
+| Cloudflare AI Gateway | `cloudflare-ai-gateway` | `claude-opus-4-8` |
+| Cloudflare Workers AI | `cloudflare-workers-ai` | `@cf/moonshotai/kimi-k2.7-code` |
+| Hugging Face | `huggingface` | `deepseek-ai/DeepSeek-V4-Pro` |
+| Together AI | `together` | `deepseek-ai/DeepSeek-V4-Pro` |
+| Fireworks | `fireworks` | `accounts/fireworks/models/deepseek-v4-pro` |
+| NVIDIA | `nvidia` | `nvidia/nemotron-3-ultra-550b-a55b` |
+| Ant Ling | `ant-ling` | `Ring-2.6-1T` |
+| OpenCode | `opencode` | `claude-opus-4-8` |
+| OpenCode Go | `opencode-go` | `kimi-k2.7-code` |
+| Z.ai | `zai` | `glm-5.2` |
+| Z.ai Coding CN | `zai-coding-cn` | `glm-5.2` |
+| Kimi Coding | `kimi-coding` | `k2p7` |
+| MiniMax | `minimax` | `MiniMax-M3` |
+| MiniMax CN | `minimax-cn` | `MiniMax-M3` |
+| Moonshot AI | `moonshotai` | `kimi-k2.7-code` |
+| Moonshot AI CN | `moonshotai-cn` | `kimi-k2.7-code` |
+| Xiaomi | `xiaomi` | `mimo-v2.5-pro` |
+| Xiaomi Token Plan CN | `xiaomi-token-plan-cn` | `mimo-v2.5-pro` |
+| Xiaomi Token Plan AMS | `xiaomi-token-plan-ams` | `mimo-v2.5-pro` |
+| Xiaomi Token Plan SGP | `xiaomi-token-plan-sgp` | `mimo-v2.5-pro` |
+
+## Configure a provider
+
+1. In the Shipfox dashboard, navigate to **Settings → AI Providers**.
+2. Find the provider you want to use and click **Configure**.
+3. Enter the API key. Azure OpenAI also requires an **Endpoint** URL — paste your Azure deployment endpoint into the additional field.
+4. Click **Save**.
+5. Optionally, click **Set as default** to make this the default provider for agent steps that do not specify a `provider`.
+
+Once saved, any workflow in your workspace can reference that provider immediately — no redeployment required.
+
+## Using a provider in your workflow
+
+If one provider is configured and set as default, you can omit both `provider` and `model` to use the workspace defaults. Otherwise, specify both to be explicit:
+
+```yaml
+steps:
+  - prompt: Review the code for security issues.
+    # Uses workspace default provider + model
+
+  - model: gpt-5.5-pro
+    provider: openai
+    prompt: Rewrite this function to be more readable.
+
+  - model: deepseek-v4-pro
+    provider: deepseek
+    prompt: Optimize this algorithm for performance.
+```
+
+The `model` ID must match an ID recognized by the specified provider. Refer to the provider's own documentation for a full list of available model IDs — Shipfox passes the `model` string directly to the provider's API.
+
+## Unsupported providers
+
+<Note>
+  Amazon Bedrock, Google Vertex AI, OpenAI Codex, and GitHub Copilot appear in
+  the provider list but are not yet supported. They require cloud IAM
+  credentials or OAuth flows that are not available via API key configuration.
+  Support for these providers is planned for a future release.
+</Note>
+
+## Next steps
+
+- [Agent Steps](/guides/agent-steps) — use configured providers in workflow YAML with `model` and `provider`.

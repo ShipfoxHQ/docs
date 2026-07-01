@@ -1,0 +1,114 @@
+{
+  "projectType": "saas",
+  "projectName": "Shipfox",
+  "projectDescription": "Shipfox is a continuous shipping platform for engineering teams — define YAML workflows in your repo, run shell and AI agent steps on your own runners, and trigger pipelines from GitHub, Sentry, and other tools you already use.",
+  "theme": "luma",
+  "primaryColor": "#E85D3B",
+  "lightColor": "#FFF4F1",
+  "darkColor": "#1A0F0B",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Docs",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "getting-started",
+              "installation"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/workflows",
+              "concepts/jobs-steps",
+              "concepts/triggers",
+              "concepts/runners"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/checks-on-push",
+              "guides/agent-steps",
+              "guides/gate-and-retry",
+              "guides/multi-job-pipeline",
+              "guides/model-providers"
+            ]
+          },
+          {
+            "group": "AI Assistance",
+            "pages": [
+              "ai/overview",
+              "ai/authoring-prompt",
+              "ai/skills-package"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/workflow-schema",
+              "reference/trigger-sources",
+              "reference/step-types",
+              "reference/glossary"
+            ]
+          },
+          {
+            "group": "Help",
+            "pages": [
+              "troubleshooting",
+              "faq"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "YAML-based workflow definitions versioned in your repository under .shipfox/workflows/",
+    "AI agent steps (model + prompt) as first-class workflow citizens",
+    "Run and shell steps side-by-side with agent steps in the same job",
+    "Gate blocks with CEL expressions to retry, restart, or fail steps conditionally",
+    "Trigger from GitHub push, Sentry issues, schedules, or manual (on-demand) fire",
+    "Self-host or managed — runners execute on your own infrastructure",
+    "30+ supported AI model providers including Anthropic, OpenAI, DeepSeek, Google, and more",
+    "Dashboard with live streaming run, job, and step logs",
+    "Multi-job DAG pipelines with `needs` ordering and isolated job environments",
+    "AI-ingestible docs with llms.txt, skills package, and copy/paste authoring prompt"
+  ],
+  "publicApiSurface": [
+    "POST /auth/signup",
+    "POST /auth/login",
+    "GET /auth/me",
+    "POST /auth/change-password",
+    "POST /auth/password-reset/request",
+    "POST /auth/password-reset/confirm",
+    "POST /projects — create project",
+    "GET /projects — list projects",
+    "GET /projects/:id",
+    "POST /definitions — create workflow definition",
+    "GET /definitions — list definitions",
+    "GET /definitions/:id",
+    "POST /definitions/validate — validate workflow YAML",
+    "GET /workflows/runs — list runs",
+    "GET /workflows/runs/:id — get run",
+    "POST /workflows/runs/:id/cancel",
+    "POST /workflows/runs/:id/rerun",
+    "POST /workflow-definitions/:definitionId/fire — fire manual run",
+    "GET /trigger-events — list trigger events",
+    "POST /runners/register — register runner",
+    "GET /runners — list active runners",
+    "POST /runners/registration-tokens — create registration token",
+    "GET /agent/providers — list model provider catalog",
+    "GET /agent/provider-configs — list configured providers",
+    "POST /agent/provider-configs — upsert provider config",
+    "DELETE /agent/provider-configs/:id",
+    "POST /agent/provider-configs/:id/set-default",
+    "workflowDocumentSchema — Zod schema for workflow YAML validation",
+    "parseWorkflowDocument() — parse and validate a workflow document",
+    "InvalidWorkflowDocumentError — typed error with Zod validation issues",
+    "npx skills add shipfox/agent-skills — install AI authoring skill"
+  ]
+}
