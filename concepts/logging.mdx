@@ -14,9 +14,8 @@ model messages, thinking, and tool calls are captured as structured events.
 <Tabs>
   <Tab title="Run steps">
     A `run` step's `stdout` and `stderr` are captured line by line. Output can be
-    organized with `::group::` / `::endgroup::` markers, which the dashboard renders
-    as collapsible sections. Secrets known to the runner are masked before the
-    output leaves the machine.
+    organized into named, collapsible [groups](#grouping-output). Secrets known to
+    the runner are masked before the output leaves the machine.
   </Tab>
   <Tab title="Agent steps">
     An agent step captures a structured **session** in addition to any stdout: each
@@ -25,6 +24,40 @@ model messages, thinking, and tool calls are captured as structured events.
     these into a readable transcript rather than a wall of text.
   </Tab>
 </Tabs>
+
+## Grouping output
+
+Inside a `run` step, wrap output in **named groups** with `::group::<name>` and
+`::endgroup::` markers, each on its own line. The dashboard renders every group as a
+collapsible section titled with its name, so a long step reads as a tidy outline
+instead of a wall of text.
+
+```bash
+echo "::group::Install dependencies"
+npm ci
+echo "::endgroup::"
+
+echo "::group::Run tests"
+npm test
+echo "::endgroup::"
+```
+
+Groups **nest** into a tree — open a group inside another and the dashboard shows the
+enclosing structure:
+
+```bash
+echo "::group::Build"
+echo "::group::Compile"
+tsc -b
+echo "::endgroup::"
+echo "::group::Bundle"
+vite build
+echo "::endgroup::"
+echo "::endgroup::"
+```
+
+Nesting is capped at **32 levels deep**; past the cap a group is flattened into plain
+output rather than adding another level. Group names are limited to 1 KiB.
 
 ## Live tail, then persisted
 
