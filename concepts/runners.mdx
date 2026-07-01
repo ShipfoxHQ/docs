@@ -1,5 +1,5 @@
 ---
-title: "Runners: Where Shipfox Jobs Execute"
+title: "Runners: Deploy and Register Your Own Shipfox Runner"
 sidebarTitle: "Runners"
 description: "Runners are processes you deploy on your own infrastructure. They poll Shipfox for jobs matching their labels and execute steps on your machines."
 ---
@@ -21,7 +21,7 @@ The lifecycle of a runner from registration to job execution follows these steps
 Labels are how Shipfox matches jobs to runners. A runner can carry multiple labels, and a workflow job's `runner:` field specifies which label (or labels) are required.
 
 - A job is dispatched to a runner only if the runner has **all** of the required labels.
-- Labels are set when you start the runner process, typically as a comma-separated argument or environment variable (see the runner CLI reference for exact flags).
+- Labels are set when you start the runner process, typically as a comma-separated argument or environment variable. Refer to the runner setup instructions in Settings → Runners for the exact flags your version accepts.
 - A single machine can run multiple runner processes with different label sets.
 
 **Example:** A workflow with `runner: ubuntu-latest` is dispatched to any online runner that has the `ubuntu-latest` label. A workflow with `runner: [ubuntu-latest, gpu]` requires a runner that carries both labels simultaneously.

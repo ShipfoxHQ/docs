@@ -50,6 +50,9 @@ is dispatched to a runner only when the runner has **all** the labels listed in 
 workflow's `runner:` field. Make sure your runner's labels match exactly what your
 workflows declare — a mismatch is the most common cause of runs sticking in `pending`.
 
+By default a runner exits after an idle window. For a long-lived runner that keeps
+polling, set `SHIPFOX_POLL_MAX_DURATION_MS=0` in its environment.
+
 <Tip>
   To scale runners automatically instead of starting each one by hand, run a
   [runner provisioner](/concepts/runner-provisioners) — it starts ephemeral,

@@ -1,7 +1,7 @@
 ---
-title: "Build Multi-Job Pipelines in Shipfox"
+title: "Build Multi-Job Pipelines with Shipfox Workflows"
 sidebarTitle: "Multi-Job Pipeline"
-description: "Connect Shipfox jobs with needs to create sequential or parallel pipelines. Each job runs in isolation and re-clones the repo — learn how to structure them."
+description: "Sequence or parallelize Shipfox jobs with needs. Each job re-clones the repository — no shared filesystem. Learn fan-out, fan-in, and isolation patterns."
 ---
 
 Shipfox workflows support multi-job pipelines where jobs run in parallel by default and are sequenced with `needs`. Each job is fully isolated — it re-clones the repository and has its own environment. This page shows you how to design effective pipelines, avoid common isolation pitfalls, and compose fan-out / fan-in patterns that keep total runtime low.
@@ -31,24 +31,26 @@ Use `needs` to declare that a job must wait for one or more other jobs to succee
 
 ```yaml
 jobs:
-  install:
+  lint:
     steps:
       - run: npm ci
+      - run: npm run lint
   test:
-    needs: install
     steps:
+      - run: npm ci
       - run: npm test
   deploy:
     needs: test
     steps:
+      - run: npm ci
       - run: ./scripts/deploy.sh
 ```
 
 <Warning>
-  Jobs do not share a filesystem. Even though `install` runs `npm ci`, the
-  `test` job must also run `npm ci` independently — each job re-clones the
-  repository from scratch into a fresh environment. There is no shared
-  `node_modules` between jobs.
+  **Jobs do not share a filesystem.** Each job re-clones the repository from
+  scratch into a fresh environment. Every job that needs dependencies must run
+  `npm ci` (or your equivalent install step) independently — there is no shared
+  `node_modules` or build cache between jobs.
 </Warning>
 
 `needs` accepts either a single string or a list of strings (see fan-in below).

@@ -91,6 +91,10 @@ platform without any cloud account. For a production deployment, see
     ```
 
     The runner reads `SHIPFOX_API_URL`, `SHIPFOX_RUNNER_REGISTRATION_TOKEN`, and `SHIPFOX_RUNNER_LABELS` from its environment. It will appear as **Online** in the dashboard within a few seconds.
+
+    <Note>
+      A runner exits after a default idle window (about 5 minutes). To keep it polling indefinitely during evaluation, add `SHIPFOX_POLL_MAX_DURATION_MS=0` to its environment.
+    </Note>
   </Step>
   <Step title="Fire your first run">
     Create a workflow file in the `shipfox/demo` repository that uses a manual trigger — for example:
