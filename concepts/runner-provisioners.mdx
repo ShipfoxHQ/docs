@@ -78,6 +78,10 @@ configured through environment variables:
 | `SHIPFOX_PROVISIONER_DOCKER_NETWORK` | no | Docker network to attach runners to |
 | `SHIPFOX_PROVISIONER_DOCKER_EXTRA_HOSTS` | no | Extra host mappings (e.g. `host.docker.internal:host-gateway`) |
 
+Create the provisioner token (`SHIPFOX_PROVISIONER_TOKEN`) on **Settings → Runner
+Provisioners** in the dashboard — the value is shown once, and you can revoke it
+there.
+
 Poll intervals, reservation limits, token batch size, and the registration deadline
 have sensible defaults and can be tuned with additional `SHIPFOX_PROVISIONER_*`
 variables.
