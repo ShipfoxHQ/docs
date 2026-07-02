@@ -1,11 +1,11 @@
 ---
 title: "Custom Webhooks: Trigger Workflows from Any System"
 sidebarTitle: "Custom webhook"
-description: "Create a Shipfox webhook connection, point any system at its URL, and trigger workflows on the webhook.received event. The connection slug is your trigger source."
+description: "Create a Shipfox webhook connection, point any system at its URL, and trigger workflows on the received event. The connection slug is your trigger source."
 ---
 
 A **custom webhook** connection gives you a unique URL that any system can POST to.
-Every request that arrives fires the `webhook.received` event, which your workflows
+Every request that arrives fires the `received` event, which your workflows
 can trigger on. Use it for tools Shipfox doesn't integrate with directly — CI
 systems, monitoring, internal services, or anything that can send an HTTP request.
 
@@ -32,7 +32,7 @@ systems, monitoring, internal services, or anything that can send an HTTP reques
     Shipfox responds `202 Accepted` with a `delivery_id`.
   </Step>
   <Step title="Trigger a workflow">
-    Author a trigger using the connection slug as `source` and `webhook.received`
+    Author a trigger using the connection slug as `source` and `received`
     as `event`.
   </Step>
 </Steps>
@@ -43,10 +43,10 @@ systems, monitoring, internal services, or anything that can send an HTTP reques
 triggers:
   on_webhook:
     source: deploy_hook       # your webhook connection slug
-    event: webhook.received
+    event: received
 ```
 
-`webhook.received` is the only event a custom webhook emits — every request to the
+`received` is the only event a custom webhook emits — every request to the
 ingest URL fires it.
 
 ## Event payload
