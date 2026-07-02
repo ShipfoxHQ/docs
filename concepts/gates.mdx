@@ -18,7 +18,7 @@ A gate is declared on a **run step** under the `gate` key:
 ```yaml
 steps:
   - run: npm test
-    name: test
+    key: test
   - run: ./flaky-integration.sh
     gate:
       success_if: "exit_code == 0"
@@ -34,8 +34,8 @@ steps:
 </ParamField>
 
 <ParamField path="gate.on_failure.restart_from" type="string">
-  The `name` of an earlier step in the same job to restart from when the gate
-  fails. Execution resumes at that step.
+  The `key` of an earlier step in the same job to restart from when the gate
+  fails (set `key:` on the target step). Execution resumes at that step.
 </ParamField>
 
 <ParamField path="gate.on_failure.output" type="string">

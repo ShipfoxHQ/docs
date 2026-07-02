@@ -60,11 +60,11 @@ This page covers the most common issues teams encounter with Shipfox and how to 
   </Accordion>
 
   <Accordion title="`restart_from` validation error">
-    **Cause:** The step named in `restart_from` doesn't exist, appears after the gate step, or has no `name:`.
+    **Cause:** The step referenced by `restart_from` doesn't exist, appears after the gate step, or has no `key:`.
 
     **Fix:**
-    - Add a `name:` field to the step you want to restart from.
-    - Ensure the named step appears **before** the gate step in the same job.
+    - Add a `key:` field to the step you want to restart from (`restart_from` matches keys, not `name:` labels).
+    - Ensure the keyed step appears **before** the gate step in the same job.
     - Use the exact `name` string — it's case-sensitive.
   </Accordion>
 

@@ -15,7 +15,7 @@ A run step executes a shell command on the job's runner. It has access to enviro
 </ParamField>
 
 <ParamField body="name" type="string">
-  Displayed in the dashboard log. Required if this step is referenced in a `restart_from` field elsewhere in the same job.
+  Displayed in the dashboard log. Display-only — a step referenced by `restart_from` needs a `key:`, not a `name:`.
 </ParamField>
 
 <ParamField body="env" type="object">
@@ -31,14 +31,14 @@ A run step executes a shell command on the job's runner. It has access to enviro
 </ParamField>
 
 ```yaml
-- name: test
+- key: test
   run: npm test
   env:
     CI: "true"
   gate:
     success_if: exit_code == 0
     on_failure:
-      restart_from: install
+      restart_from: install   # 'install' is an earlier step's key
 ```
 
 ## Agent step
@@ -90,7 +90,7 @@ A gate block is optional on both run steps and agent steps. It must contain at l
 </ParamField>
 
 <ParamField body="on_failure.restart_from" type="string">
-  The `name` of an earlier step in the same job to restart from when this step fails. The referenced step must be named and must appear before the current step in the job's step list.
+  The `key` of an earlier step in the same job to restart from when this step fails. The referenced step must have a `key:` and appear before the current step in the job's step list (`name:` is display-only and cannot be referenced).
 </ParamField>
 
 <ParamField body="on_failure.output" type="string">

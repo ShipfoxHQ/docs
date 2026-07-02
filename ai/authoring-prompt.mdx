@@ -26,13 +26,13 @@ trigger.
 Job { steps (>=1), needs?, runner?, env? }. Jobs run in parallel; each is isolated
 and re-clones the repo (install deps per job).
 
-Step is a run step { run, name?, env?, gate? } OR an agent step
-{ model, prompt, thinking?, provider?, name?, gate? } — never both; agent requires
-prompt; env is run-only.
+Step is a run step { run, key?, name?, env?, gate? } OR an agent step
+{ model, prompt, thinking?, provider?, key?, name?, gate? } — never both; agent
+requires prompt; env is run-only. key identifies a step; name is display-only.
 
 gate (run or agent steps) { success_if: "<CEL over exit_code>", on_failure: {
-restart_from: "<earlier named step>", output?: "<message>" } }. Restarts are capped
-(3 attempts per gating step) before the job fails.
+restart_from: "<earlier step's key — NOT its name>", output?: "<message>" } }.
+Restarts are capped (3 attempts per gating step) before the job fails.
 
 ${{ }} interpolation IS supported in run/env/prompt, resolved at run creation from
 run/trigger/event/inputs context (e.g. ${{ trigger.source }}). Do NOT use (not

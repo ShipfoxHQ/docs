@@ -20,9 +20,9 @@
 - [Authoring Prompt](/ai/authoring-prompt): A compact schema cheat sheet to paste into any coding agent for valid workflow YAML.
 - [Skills Package](/ai/skills-package): Install the Shipfox skill for Claude Code, Cursor, Codex, and 18+ other agent tools.
 - [Workflow Schema](/reference/workflow-schema): Complete YAML schema reference: all fields, validation rules, and a full example.
-- [Trigger Sources](/reference/trigger-sources): Every supported trigger source and event: manual, github, sentry.
+- [Trigger Sources](/reference/trigger-sources): Every trigger source and event: manual, GitHub, Sentry, custom webhooks — source is the connection slug.
 - [Step Types](/reference/step-types): Run step and agent step field reference with the constraints table.
-- [Glossary](/reference/glossary): Definitions for every Shipfox term: workflow, run, job, step, trigger, runner, gate.
+- [Glossary](/reference/glossary): Definitions for the core Shipfox terms: workflow, run, job, step, trigger, runner, gate.
 - [Troubleshooting](/troubleshooting): Fix common issues: pending runs, validation errors, agent failures, trigger problems.
 - [FAQ](/faq): Quick answers about YAML authoring, AI providers, secrets, self-hosting, and roadmap features.
 
@@ -35,7 +35,9 @@ Key rules:
 - Steps are `run` (shell) OR `model`+`prompt` (agent) — never both on one step
 - `env` is valid only on run steps
 - At most one `manual` trigger per workflow
-- Do NOT use: `loop`, `matrix`, `branch`, `${{ }}` interpolation (not shipped yet)
+- A trigger's `source` is the connection SLUG (e.g. `github_acme`), not the bare provider name; `manual` is the literal exception
+- `${{ }}` interpolation IS shipped (run, env, prompt) — the common mistake is writing `{{ }}` instead
+- Do NOT use: `loop`, `matrix`, `branch` (not shipped yet)
 - `filter` parses but is not enforced — trigger fires on every matching (source, event)
-- `event.ref` is the bare branch name (e.g., `main`), not `refs/heads/main`
-- `key:` is a valid optional field on any step for identification (e.g., used by `restart_from`)
+- `event.ref` on a push is the full Git ref (e.g., `refs/heads/main`), not the bare branch name
+- `key:` identifies a step and is what `restart_from` references; `name:` is display-only

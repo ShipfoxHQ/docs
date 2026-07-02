@@ -1,10 +1,10 @@
 ---
 title: "Use Gate Conditions and Retry Loops in Shipfox Workflows"
 sidebarTitle: "Gate & Retry"
-description: "Use Shipfox gate blocks to evaluate step success with CEL expressions and automatically retry from an earlier named step when a condition fails."
+description: "Use Shipfox gate blocks to evaluate step success with CEL expressions and automatically retry from an earlier keyed step when a condition fails."
 ---
 
-A **gate** block on a step lets you define a success condition and a retry strategy. When the condition fails, Shipfox restarts execution from an earlier named step in the same job — creating a loop that continues until the condition is met or the job times out. Pair it with an agent step and the loop does real work: the agent edits code, a shell step verifies it, and the gate loops back — no scripting.
+A **gate** block on a step lets you define a success condition and a retry strategy. When the condition fails, Shipfox restarts execution from an earlier keyed step in the same job — creating a loop that continues until the condition is met or the job times out. Pair it with an agent step and the loop does real work: the agent edits code, a shell step verifies it, and the gate loops back — no scripting.
 
 ## Gate schema
 
@@ -14,7 +14,7 @@ A gate block sits directly on a step and supports two fields:
 gate:
   success_if: exit_code == 0   # CEL expression evaluated against the step outcome
   on_failure:
-    restart_from: install      # must name an earlier step that has a `name:` field
+    restart_from: install      # must reference an earlier step that has a `key:` field
 ```
 
 `success_if` and `on_failure` are both optional individually, but at least one must be present. A gate with only `success_if` marks the step as failed without retrying. A gate with only `on_failure` always retries. Use both together for a conditional retry loop.
@@ -27,7 +27,7 @@ The canonical pattern installs dependencies, runs an agent to fix failing tests,
 jobs:
   fix:
     steps:
-      - name: install
+      - key: install
         run: npm ci
       - model: claude-opus-4-8
         prompt: Fix the failing tests in the repository.
@@ -56,11 +56,11 @@ More CEL variables (stdout content, step duration, etc.) are planned for future 
 ## Rules for restart_from
 
 <Warning>
-  The step named in `restart_from` must appear **before** the gate step in the same job. Forward references are not allowed.
+  The step referenced by `restart_from` must appear **before** the gate step in the same job. Forward references are not allowed.
 </Warning>
 
-- The target step must have a `name:` field. Unnamed steps cannot be referenced by `restart_from`.
-- The reference is matched by step name, not by position — reordering steps changes which step is targeted.
+- The target step must have a `key:` field — `restart_from` matches keys, not display names. (`name:` is a separate, display-only label.)
+- The reference is matched by step key, not by position — reordering steps changes which step is targeted.
 - `restart_from` must reference a step within the **same job**. Cross-job retries are not supported; use `needs` to express job dependencies instead.
 
 ## Job execution timeout
@@ -72,7 +72,7 @@ jobs:
   fix:
     execution_timeout: "30m"
     steps:
-      - name: install
+      - key: install
         run: npm ci
       - model: claude-opus-4-8
         prompt: Fix the failing tests in the repository.

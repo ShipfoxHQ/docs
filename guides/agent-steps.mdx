@@ -19,7 +19,7 @@ jobs:
         prompt: Read the repository and summarize what it does in three sentences.
 ```
 
-The optional `name` field labels the step in the dashboard and is required if you want to reference the step in a `restart_from` gate.
+The optional `name` field labels the step in the dashboard. To reference a step from a `restart_from` gate, give it a `key:` — keys identify steps; names are display-only.
 
 ## Choosing a model
 
@@ -67,7 +67,7 @@ Agent steps and shell steps can be mixed freely within a job. This is the founda
 jobs:
   fix-and-verify:
     steps:
-      - name: install
+      - key: install
         run: npm ci
       - model: claude-opus-4-8
         prompt: The tests are failing. Edit the source code to fix them.
