@@ -13,9 +13,9 @@ specific platform, see [AWS](/installation/aws) or [Kubernetes](/installation/ku
 ## What you run, and what talks to what
 
 {/* Source: images/diagrams/deployment-topology.mmd — regenerate with:
-    npx -y @mermaid-js/mermaid-cli -b white -i images/diagrams/deployment-topology.mmd -o images/diagrams/deployment-topology.svg */}
+    npx -y @mermaid-js/mermaid-cli -b white -i images/diagrams/deployment-topology.mmd -s 3 -o images/diagrams/deployment-topology.png */}
 <Frame caption="Deployment topology — click to enlarge.">
-  <img src="/images/diagrams/deployment-topology.svg" alt="Deployment topology: event sources send webhooks into the Shipfox API; the control plane containers connect to PostgreSQL, Temporal, and S3-compatible object storage; runners and an optional provisioner on your compute connect outbound only, clone the repository, and call model providers with your API keys" />
+  <img src="/images/diagrams/deployment-topology.png" alt="Deployment topology: event sources send webhooks into the Shipfox API; the control plane containers connect to PostgreSQL, Temporal, and S3-compatible object storage; runners and an optional provisioner on your compute connect outbound only, clone the repository, and call model providers with your API keys" />
 </Frame>
 
 Two directions matter: **runners only connect outward** — you never open an inbound
