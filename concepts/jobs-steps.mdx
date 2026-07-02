@@ -56,7 +56,7 @@ A `run` step executes a shell command on the runner. This is the primary way to 
 
 ```yaml
 steps:
-  - name: install          # optional — names the step for restart_from
+  - key: install           # optional — identifies the step for restart_from
     run: npm ci
     env:
       CI: "true"
@@ -71,7 +71,11 @@ steps:
 </ParamField>
 
 <ParamField path="name" type="string">
-  A human-readable name for the step. Also used as the target identifier for `gate.on_failure.restart_from` — if you want a gate to be able to restart from this step, it must have a `name`.
+  A human-readable name for the step, shown in the dashboard. Display-only — to reference this step from `gate.on_failure.restart_from`, give it a `key:`.
+</ParamField>
+
+<ParamField path="key" type="string">
+  A stable identifier for the step. This is what `gate.on_failure.restart_from` matches against — if you want a gate to restart from this step, it must have a `key`.
 </ParamField>
 
 <ParamField path="env" type="object">
@@ -88,7 +92,7 @@ An agent step invokes an AI model. Instead of `run`, you provide a `prompt`. The
 
 ```yaml
 steps:
-  - name: review
+  - key: review
     model: claude-opus-4-8
     prompt: Review the latest diff and summarize any issues.
     thinking: high
@@ -114,7 +118,11 @@ steps:
 </ParamField>
 
 <ParamField path="name" type="string">
-  Human-readable name for the step. Used by gate `restart_from` references.
+  Human-readable name for the step, shown in the dashboard. Display-only.
+</ParamField>
+
+<ParamField path="key" type="string">
+  A stable identifier for the step, matched against `gate.on_failure.restart_from`.
 </ParamField>
 
 <ParamField path="gate" type="object">
@@ -133,7 +141,7 @@ A gate block lets a step evaluate its own success and optionally restart the job
 gate:
   success_if: exit_code == 0          # CEL expression
   on_failure:
-    restart_from: install             # must name an earlier step in the same job
+    restart_from: install             # must reference an earlier keyed step in the same job
 ```
 
 <ParamField path="success_if" type="string">
