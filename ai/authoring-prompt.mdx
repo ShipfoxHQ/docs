@@ -20,7 +20,7 @@ Trigger { source, event, filter?, with? }. For integrations, source is the
 CONNECTION SLUG (e.g. github_<org>, sentry_<org>, or your webhook slug), not the
 bare provider name; for on-demand runs it is literally "manual". Shipped events:
 manual/fire, github push (+ other GitHub events), sentry issue.(created|resolved|
-assigned|archived|unresolved), custom-webhook/webhook.received. At most one manual
+assigned|archived|unresolved), custom-webhook/received. At most one manual
 trigger.
 
 Job { steps (>=1), needs?, runner?, env? }. Jobs run in parallel; each is isolated
@@ -62,7 +62,7 @@ evaluated yet. event.ref on a push is the full Git ref (e.g. "refs/heads/main").
 The prompt is deliberately compact but complete. It covers every dimension of the shipped schema:
 
 - **Top-level schema fields** — `name`, `runner`, `env`, `triggers`, `jobs`, and which keys are rejected
-- **Trigger sources (shipped today)** — `manual`, plus integration connection slugs for GitHub (`push`), Sentry (`issue.*`), and custom webhooks (`webhook.received`)
+- **Trigger sources (shipped today)** — `manual`, plus integration connection slugs for GitHub (`push`), Sentry (`issue.*`), and custom webhooks (`received`)
 - **Job isolation and `needs` ordering** — parallel execution, repo re-cloning, and dependency chaining
 - **Step kinds: run vs. agent** — the two mutually exclusive step shapes and their allowed fields
 - **Gate / restart_from rules** — CEL expressions over `exit_code` and how to wire restart targets
