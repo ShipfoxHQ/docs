@@ -149,7 +149,7 @@ gate:
 </ParamField>
 
 <ParamField path="on_failure.restart_from" type="string">
-  The `name` of an earlier step in the same job to restart from when this step's gate is not satisfied. The referenced step must appear before the current step in the `steps` list and must have a `name` field.
+  The `key` of an earlier step in the same job to restart from when this step's gate is not satisfied. The referenced step must appear before the current step in the `steps` list and must have a `key` field (`name:` is display-only and cannot be referenced).
 </ParamField>
 
 <ParamField path="on_failure.output" type="string">
@@ -160,9 +160,9 @@ The recommended pattern is to pair an agent step with a `run` step that validate
 
 ```yaml
 steps:
-  - name: fix
+  - key: fix
     prompt: Fix the failing tests.
-  - name: verify
+  - key: verify
     run: npm test
     gate:
       success_if: exit_code == 0
